@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import hours from './demo/index'
+
 
 ReactDOM.render(
   <React.StrictMode>
@@ -16,13 +18,7 @@ ReactDOM.render(
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
-function time() {
-  const element = (
-    <div>
-      <h1>Hello, World!</h1>
-      <p>It is {new Date().toLocaleDateString()} : {new Date().getSeconds()}</p>
-    </div>
-  )
-  ReactDOM.render(element, document.getElementById('root'))
-}
-setInterval(time, 1000)
+// Modules
+
+console.log(hours())
+
