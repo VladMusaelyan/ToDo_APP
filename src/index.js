@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import hours from './demo/index'
 
 
 ReactDOM.render(
@@ -20,5 +19,5 @@ serviceWorker.unregister();
 
 // Modules
 
-console.log(hours())
+
 
