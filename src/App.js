@@ -1,31 +1,28 @@
 /* eslint-disable jsx-a11y/heading-has-content */
 import React from 'react';
 import './App.css';
-import Date from './demo/index'
+import Person from './demo/Person';
+import Animal from './demo/Animal';
+import JavaScript from './demo/JavaScript'
 
-function Person(props) {
-  return (
-    <div>
-      <h3>Name: {props.name}</h3>
-      <h3>Lastname: {props.lastname}</h3>
-      <h3>Occupation: {props.occupation}</h3>
-    </div>
-  )
-}
+
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Person name='Elias'
-          lastname='Ashmole'
+        <Person name='Alias'
+          lastName='Ashmole'
           occupation='Alchemyst'
         />
-        <Person name='Mark'
-          lastname='Zuckerberg'
-          occupation='Devoloper'
+        <Animal type='Dog'
+          color='Black'
+          name='Oggy'
         />
-        <Date />
+        <JavaScript name='JavaScript'
+          typingDiscipline='Dynamic'
+          firstAppeared='December 4, 1995'
+        />
       </header>
     </div>
   );
