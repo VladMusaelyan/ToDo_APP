@@ -5,6 +5,7 @@ import React from 'react';
 function Person(props) {
     return (
         <div>
+            <h1 className='header'>Understanding Modules and Components</h1>
             <h1>Alias Ashmole</h1>
             <h3>Name: {props.name}</h3>
             <h3>Lastname: {props.lastName}</h3>
