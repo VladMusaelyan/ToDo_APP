@@ -2,6 +2,7 @@
 import React from 'react';
 import './App.css';
 import Product from './product/Product';
+import Link from './demo/Example';
 
 
 
@@ -19,6 +20,7 @@ function App() {
           name='Banana'
           description='Fresh bananas from Afrika'
         />
+        <Link />
 
       </header>
     </div>

@@ -1,47 +1,22 @@
+/* eslint-disable no-unused-expressions */
 import React from 'react';
 
-const arr = [1, 2, 3, 4];
-const [a, b, c, d] = arr;
-console.log(a);
-console.log(arr.reduce((x, y) => x + y))
-let sum = 0;
-function num() {
-    for (let num of arr) {
-        sum += num;
+class Link extends React.Component {
 
-
+    changeLocation = () => {
+        window.location.href = 'https://www.youtube.com/watch?v=UGapN-hrekw&list=PLqKQF2ojwm3l4oPjsB9chrJmlhZ-zOzWT&index=2&ab_channel=%D0%92%D0%BB%D0%B0%D0%B4%D0%B8%D0%BB%D0%B5%D0%BD%D0%9C%D0%B8%D0%BD%D0%B8%D0%BD'
     }
-    return sum;
-}
-console.log(`num : ${num()}`)
 
-
-const person = {
-    name: 'Vlad',
-    surName: 'Musaelyan',
-    age: 20,
-    gender: 'M'
+    render() {
+        return (
+            <div>
+                <button
+                    onClick={this.changeLocation}
+                >
+                    Link
+                </button>
+            </div>
+        );
+    };
 };
-const { name, surName, age, gender } = person;
-console.log(name);
-console.log(surName);
-console.log(age);
-console.log(gender);
-
-const methods = {
-    name: 'Tigran',
-    run: () => 'runing...',
-    sleep: () => 'sleeping...'
-}
-
-const newPerson = Object.assign(person, methods);
-console.log(newPerson);
-console.log(person);
-
-
-const newUser = {
-    ...person,
-    ...methods
-};
-console.log(newUser);
-
+export default Link;

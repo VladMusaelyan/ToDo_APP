@@ -6,23 +6,24 @@ class Price extends Component {
         super(props);
         this.state = {
             price: props.price,
-            rate: 487
+            rate: 487,
+            amd: '֏',
+            usd: '$'
         };
     };
 
     sum = () => {
-        const { price, rate } = this.state;
+        const { price, rate, amd, usd } = this.state;
         const sign = price[price.length - 1];
-        if (sign === '$') {
-            const amd = parseFloat(price)
+        const value = parseFloat(price);
+        if (sign === usd) {
             this.setState({
-                price: amd * rate + '֏'
+                price: value * rate + amd
             });
 
-        } else if (sign === '֏') {
-            const usd = parseFloat(price)
+        } else if (sign === amd) {
             this.setState({
-                price: usd / rate + '$'
+                price: value / rate + usd
             });
         }
 
@@ -31,6 +32,7 @@ class Price extends Component {
 
 
     render() {
+
         return (
             <div>
                 <div>Price: {this.state.price}</div>
