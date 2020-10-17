@@ -16,16 +16,13 @@ class Price extends Component {
         const { price, rate, amd, usd } = this.state;
         const sign = price[price.length - 1];
         const value = parseFloat(price);
-        if (sign === usd) {
-            this.setState({
+        sign === usd
+            ? this.setState({
                 price: value * rate + amd
-            });
-
-        } else if (sign === amd) {
-            this.setState({
+            })
+            : this.setState({
                 price: value / rate + usd
             });
-        }
 
     }
 
