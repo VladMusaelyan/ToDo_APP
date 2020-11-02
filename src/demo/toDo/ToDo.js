@@ -17,7 +17,8 @@ class ToDo extends React.Component {
             inputValue: event.target.value
         });
     }
-    handleClick = () => {
+    handleClick = (event) => {
+        event.preventDefault()
         this.state.inputValue == '' ? null : this.setState({
             tasks: this.state.tasks.concat(this.state.inputValue),
             inputValue: ''
@@ -37,12 +38,14 @@ class ToDo extends React.Component {
         });
         return (
             <div >
-                <input
-                    value={this.state.inputValue}
-                    type="text"
-                    onChange={this.handleChange}
-                />
-                <button onClick={this.handleClick}>Add</button>
+                <form>
+                    <input
+                        value={this.state.inputValue}
+                        type="text"
+                        onChange={this.handleChange}
+                    />
+                    <button onClick={this.handleClick} type="submit">Add</button>
+                </form>
                 <Task text={tasks} />
             </div >
         );
