@@ -1,0 +1,9 @@
+.container{
+    display: flex;
+    justify-content: center;
+    color: red;
+}
+
+.listGroup{
+    text-align: start;
+}
