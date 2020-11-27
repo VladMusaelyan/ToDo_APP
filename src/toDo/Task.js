@@ -4,15 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Button, Row, Col, Card } from 'react-bootstrap';
 
-class Task extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            element: this.props.element
-        }
-    }
+class Task extends React.PureComponent {
     render() {
-        const { element } = this.state
+        console.log('Tasks')
+        const { element } = this.props
         return (
             <>
                 <Card className={element.checked === true && 'border border-danger'}>
