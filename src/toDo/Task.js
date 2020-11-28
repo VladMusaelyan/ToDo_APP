@@ -5,12 +5,24 @@ import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Button, Row, Col, Card } from 'react-bootstrap';
 
 class Task extends React.PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            elementId: null
+        }
+    }
+    // setState for updateing component
+    handleCheckboxClick = () => {
+        const { checkboxClick, element } = this.props;
+        this.setState({
+            elementId: checkboxClick(element._id)
+        })
+    }
     render() {
-        console.log('Tasks')
         const { element } = this.props
         return (
             <>
-                <Card className={element.checked === true && 'border border-danger'}>
+                <Card className={element.checked && 'border border-danger'}>
                     <Card.Body>
                         <Row>
                             <Col xs={10} sm={10} md={10} lg={10} xl={10}>
@@ -22,7 +34,8 @@ class Task extends React.PureComponent {
                                 <input
                                     type="checkbox"
                                     className={styles.checkbox}
-                                    onClick={() => this.props.checkboxClick(element._id)}
+                                    onClick={this.handleCheckboxClick}
+                                // onClick={this.handleCheckboxClick}
                                 />
                             </Col>
                         </Row>

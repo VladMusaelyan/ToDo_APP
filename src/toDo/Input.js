@@ -5,7 +5,6 @@ import { Button, InputGroup, FormControl, Col } from 'react-bootstrap';
 
 class Input extends React.PureComponent {
     render() {
-        console.log('Input')
         const { boolean, inputValue, handleChange, handleClick, handleKeyDown, removeTasks } = this.props;
         return (
             <>

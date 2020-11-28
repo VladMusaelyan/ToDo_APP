@@ -3,6 +3,8 @@ import Task from './Task';
 import idGenerator from '../assets/IDGenerator';
 import { Container, Row, Col, FormControl, InputGroup, Button } from 'react-bootstrap';
 import styles from './styles.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 class ToDo extends PureComponent {
     state = {
@@ -134,8 +136,8 @@ class ToDo extends PureComponent {
                                 onClick={this.removeSelected}
                                 disabled={!selectedTasks.size}
                             >
-                                Remove selected
-                        </Button>
+                                Removing Tasks
+                            </Button>
                         </Col>
                     </Row>
                 </Container>

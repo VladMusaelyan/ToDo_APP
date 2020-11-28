@@ -69,7 +69,6 @@ class ToDo extends React.PureComponent {
     }
     render() {
         const { tasks, inputValue, boolean } = this.state;
-        console.log('ToDo')
         const task = tasks.map((element) => {
             return (
                 <Col className='mt-3' key={element._id} xs={12} sm={12} md={6} lg={4} xl={4}>
