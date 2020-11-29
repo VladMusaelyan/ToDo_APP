@@ -136,7 +136,7 @@ class ToDo extends PureComponent {
                                 onClick={this.removeSelected}
                                 disabled={!selectedTasks.size}
                             >
-                                Removing Tasks
+                                Removing Task
                             </Button>
                         </Col>
                     </Row>

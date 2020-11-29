@@ -28,7 +28,11 @@ export default class EditTask extends React.PureComponent {
     render() {
         const { props } = this;
         return (
-            <Modal show={true} onHide={props.onClose} centered>
+            <Modal
+                show={true}
+                onHide={props.onClose}
+                // onEnter={this.handleSave}
+                centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Task</Modal.Title>
                 </Modal.Header>
