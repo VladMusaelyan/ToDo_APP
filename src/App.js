@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/heading-has-content */
 import React from 'react';
 import './App.css';
-import ToDo from './toDo/ToDo';
+import ToDo from './Project/ToDo/ToDo';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import ToDo from './Example/ToDo'
 

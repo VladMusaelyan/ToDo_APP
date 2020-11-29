@@ -3,6 +3,7 @@ import styles from './TaskStyles.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Button, Row, Col, Card } from 'react-bootstrap';
+import Proptypes from 'prop-types';
 
 class Task extends React.PureComponent {
     constructor(props) {
@@ -12,14 +13,14 @@ class Task extends React.PureComponent {
         }
     }
     // setState for updateing component
-    handleCheckboxClick = () => {
-        const { checkboxClick, element } = this.props;
+    handleselectedTask = () => {
+        const { selectedTask, element } = this.props;
         this.setState({
-            elementId: checkboxClick(element._id)
-        })
+            elementId: selectedTask(element._id)
+        });
     }
     render() {
-        const { element } = this.props
+        const { element, disabled, toogleEdit, onRemoveTask } = this.props
         return (
             <>
                 <Card className={element.checked && 'border border-danger'}>
@@ -34,7 +35,7 @@ class Task extends React.PureComponent {
                                 <input
                                     type="checkbox"
                                     className={styles.checkbox}
-                                    onClick={this.handleCheckboxClick}
+                                    onClick={this.handleselectedTask}
                                 />
                             </Col>
                         </Row>
@@ -44,14 +45,15 @@ class Task extends React.PureComponent {
                         <div className='d-flex flex-row-reverse'>
                             <Button
                                 variant="warning"
-                                disabled={this.props.disabled}
+                                disabled={disabled}
                                 className='ml-3'
+                                onClick={() => toogleEdit(element)}
                             >
                                 <FontAwesomeIcon icon={faEdit} />
                             </Button>
                             <Button
                                 variant="danger"
-                                onClick={() => this.props.onRemoveTask(element._id)}
+                                onClick={() => onRemoveTask(element._id)}
                                 disabled={this.props.disabled}
                             >
                                 <FontAwesomeIcon icon={faTrash} />
@@ -65,3 +67,11 @@ class Task extends React.PureComponent {
 }
 
 export default Task;
+
+Task.propTypes = {
+    selectedTask: Proptypes.func.isRequired,
+    element: Proptypes.object.isRequired,
+    onRemoveTask: Proptypes.func.isRequired,
+    toogleEdit: Proptypes.func.isRequired,
+    disabled: Proptypes.bool
+}
