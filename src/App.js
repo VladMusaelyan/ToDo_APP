@@ -3,7 +3,7 @@ import React from 'react';
 import './App.css';
 import ToDo from './Project/ToDo/ToDo';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import ToDo from './Example/ToDo'
+import './Example/Test'
 
 function App() {
   return (

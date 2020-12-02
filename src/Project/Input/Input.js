@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 class Input extends React.PureComponent {
     render() {
-        const { boolean, inputValue, handleChange, handleClick, handleKeyDown, toggleConfirm } = this.props;
+        const { boolean, inputValue, handleChange, addTask, handleKeyDown, toggleConfirm } = this.props;
         return (
             <>
                 <InputGroup className='mb-3'>
@@ -21,7 +21,7 @@ class Input extends React.PureComponent {
                     <InputGroup.Append>
                         <Button
                             variant="outline-primary"
-                            onClick={handleClick}
+                            onClick={addTask}
                             disabled={inputValue === ''}
                         >
                             Add
@@ -46,7 +46,7 @@ Input.propTypes = {
     boolean: PropTypes.number.isRequired,
     inputValue: PropTypes.string.isRequired,
     handleChange: PropTypes.func.isRequired,
-    handleClick: PropTypes.func.isRequired,
+    addTask: PropTypes.func.isRequired,
     handleKeyDown: PropTypes.func.isRequired,
     toggleConfirm: PropTypes.func.isRequired
 }

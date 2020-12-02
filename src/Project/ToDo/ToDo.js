@@ -6,7 +6,6 @@ import Task from '../Task/Task';
 import Input from '../Input/Input';
 import Confirm from '../Confirm/Confirm';
 import EditTask from '../EditTask/EditTask';
-import IdGenerator from '../../assets/IDGenerator';
 import { Row, Col, Container } from 'react-bootstrap';
 
 class ToDo extends React.PureComponent {
@@ -15,56 +14,117 @@ class ToDo extends React.PureComponent {
         inputValue: '',
         boolean: 0,                           //boolean for disabled buutons
         showConfirm: false,
-        editTask: null
+        editTask: null,
+        selectedTasks: new Set()
+    }
+    componentDidMount() {
+        fetch('http://localhost:3001/task')
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) {
+                    throw res.error;
+                }
+                this.setState({
+                    tasks: res,
+                    inputValue: ''
+                });
+            })
+            .catch(err => console.log(err))
     }
     handleChange = (event) => {
         this.setState({
             inputValue: event.target.value
         });
     }
-    handleClick = () => {
-        const { tasks, inputValue } = this.state;
-        this.setState({
-            tasks: [{
-                _id: IdGenerator(),
-                text: inputValue,
-                checked: false
-            }, ...tasks],
-            inputValue: ''
-        });
+    addTask = () => {
+        fetch('http://localhost:3001/task', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title: this.state.inputValue
+            })
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) {
+                    throw res.error;
+                }
+                const { tasks } = this.state;
+                this.setState({
+                    tasks: [res, ...tasks],
+                    inputValue: ''
+                });
+            })
+            .catch(err => console.log(err))
     }
     handleKeyDown = (e) => {
-        e.key === 'Enter' & this.state.inputValue !== '' && this.handleClick();
+        e.key === 'Enter' & this.state.inputValue !== '' && this.addTask();
     }
     // removing current task
     removeTask = (id) => {
-        const removeTask = this.state.tasks.filter(element => element._id !== id);
-        this.setState({
-            tasks: removeTask
-        });
+        fetch(`http://localhost:3001/task/${id}`, {
+            method: 'DELETE',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) {
+                    throw res.error;
+                }
+                const removeTask = this.state.tasks.filter(element => element._id !== id);
+                this.setState({
+                    tasks: removeTask
+                });
+            })
+            .catch(err => console.log(err))
+
     }
     // removing some tasks
     removeTasks = () => {
-        const removeTasks = this.state.tasks.filter(element => !element.checked);
-        this.setState({
-            tasks: removeTasks,
-            boolean: 0,
-            showConfirm: false
-        });
+        const body = {
+            tasks: [...this.state.selectedTasks]
+        };
+        fetch('http://localhost:3001/task', {
+            method: 'PATCH',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) {
+                    throw res.error;
+                }
+                const removeTasks = this.state.tasks.filter(element => !element.checked);
+                this.setState({
+                    tasks: removeTasks,
+                    boolean: 0,
+                    showConfirm: false
+                });
+            })
     }
     selectedTask = (id) => {
-        const { tasks, boolean } = this.state;
+        const { tasks, boolean, selectedTasks } = this.state;
         tasks.forEach(element => {
             if (element._id === id) {
                 element.checked = !element.checked;
                 if (element.checked === true) {
                     this.setState({
-                        boolean: boolean + 1
+                        boolean: boolean + 1,
+                        selectedTasks: selectedTasks.add(id)
                     })
                 } else {
-                    this.setState({
-                        boolean: boolean - 1
-                    })
+                    if (selectedTasks.has(id)) {
+                        this.setState({
+                            boolean: boolean - 1,
+                            selectedTask: selectedTasks.delete(id)
+                        })
+                    }
                 }
             }
         });
@@ -113,7 +173,7 @@ class ToDo extends React.PureComponent {
                                 inputValue={inputValue}
                                 handleChange={this.handleChange}
                                 handleKeyDown={this.handleKeyDown}
-                                handleClick={this.handleClick}
+                                addTask={this.addTask}
                                 toggleConfirm={this.toggleConfirm}
                             />
 
@@ -131,7 +191,7 @@ class ToDo extends React.PureComponent {
                 />
                 {!!editTask && <EditTask
                     data={editTask}
-                    onSave={(editState) => this.saveEdit(editState)}
+                    onSave={this.saveEdit}
                     onClose={() => this.toogleEdit(null)}
                 />}
             </div >

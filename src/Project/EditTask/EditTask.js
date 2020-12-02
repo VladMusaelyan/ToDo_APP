@@ -11,27 +11,41 @@ export default class EditTask extends React.PureComponent {
     }
     handleChage = (e) => {
         this.setState({
-            text: e.target.value
+            title: e.target.value
         })
     }
     handleSave = () => {
-        if (!this.state.text) {
-            return;
-        }
-        return this.props.onSave(this.state)
+        fetch(`http://localhost:3001/task/${this.state._id}`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                title: this.state.title
+            })
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.error) {
+                    throw res.error;
+                }
+                if (!this.state.title) {
+                    return;
+                }
+                return this.props.onSave(this.state);
+            })
+            .catch(err => console.log(err))
+
     }
-    // handleKeyDown = (e) => {
-    //     if (e.key === 'Enter') {
-    //         this.handleSave()
-    //     }
-    // }
+    handleKeyUp = (e) => {
+        e.key === 'Enter' && this.handleSave();
+    }
     render() {
         const { props } = this;
         return (
             <Modal
                 show={true}
                 onHide={props.onClose}
-                // onEnter={this.handleSave}
                 centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Task</Modal.Title>
@@ -42,8 +56,8 @@ export default class EditTask extends React.PureComponent {
                             placeholder="Edit task"
                             aria-describedby="basic-addon2"
                             onChange={this.handleChage}
-                            // onKeyDown={this.handleKeyDown}
-                            value={this.state.text}
+                            onKeyUp={this.handleKeyUp}
+                            value={this.state.title}
                         />
                         <InputGroup.Append>
                         </InputGroup.Append>

@@ -28,19 +28,19 @@ class Task extends React.PureComponent {
                         <Row>
                             <Col xs={10} sm={10} md={10} lg={10} xl={10}>
                                 <Card.Title>
-                                    {element.text.slice(0, 10) + '...'}
+                                    {element.title.slice(0, 10) + '...'}
                                 </Card.Title>
                             </Col>
                             <Col xs={2} sm={2} md={2} lg={2} xl={2}>
                                 <input
                                     type="checkbox"
                                     className={styles.checkbox}
-                                    onClick={this.handleselectedTask}
+                                    onClick={() => this.handleselectedTask(element._id)}
                                 />
                             </Col>
                         </Row>
                         <Card.Text>
-                            {element.text}
+                            {element.title}
                         </Card.Text>
                         <div className='d-flex flex-row-reverse'>
                             <Button
