@@ -28,7 +28,8 @@ class Task extends React.PureComponent {
                         <Row>
                             <Col xs={10} sm={10} md={10} lg={10} xl={10}>
                                 <Card.Title>
-                                    {element.title.slice(0, 10) + '...'}
+                                    {element.title.slice(0, 10)}
+                                    {element.title.length > 10 && '...'}
                                 </Card.Title>
                             </Col>
                             <Col xs={2} sm={2} md={2} lg={2} xl={2}>
@@ -40,8 +41,9 @@ class Task extends React.PureComponent {
                             </Col>
                         </Row>
                         <Card.Text>
-                            {element.title}
+                            {element.description}
                         </Card.Text>
+                        <Card.Text>Date: {element.date.slice(0, 10)}</Card.Text>
                         <div className='d-flex flex-row-reverse'>
                             <Button
                                 variant="warning"

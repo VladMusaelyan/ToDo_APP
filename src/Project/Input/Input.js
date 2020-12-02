@@ -1,41 +1,80 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Button, InputGroup, FormControl } from 'react-bootstrap';
+import { InputGroup, FormControl, Modal, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import styles from './inputstyles.module.css';
+
 
 class Input extends React.PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            title: '',
+            description: '',
+            date: new Date()
+        }
+    }
+    handleChange = (event, type) => {
+        this.setState({
+            [type]: event.target.value
+        });
+    }
+    handleKeyDown = (e) => {
+        e.key === 'Enter' & this.state.inputValue !== '' && this.props.addTask(this.state);
+    }
+    handleDateChange = (date) => {
+        this.setState({
+            date
+        });
+    };
     render() {
-        const { boolean, inputValue, handleChange, addTask, handleKeyDown, toggleConfirm } = this.props;
+        const { onClose, show, addTask } = this.props;
         return (
-            <>
-                <InputGroup className='mb-3'>
-                    <FormControl
-                        placeholder="Add a new task"
-                        aria-describedby="basic-addon2"
-                        disabled={boolean}
-                        value={inputValue}
-                        onChange={handleChange}
-                        onKeyDown={handleKeyDown}
+            <Modal
+                show={show}
+                onHide={onClose}
+                centered
+                size={"lg"}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Edit Task</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <InputGroup className='mb-3'>
+                        <FormControl
+                            placeholder="Title"
+                            onChange={(e) => this.handleChange(e, 'title')}
+                            onKeyDown={this.handleKeyDown}
+                        />
+                    </InputGroup>
+                    <textarea
+                        rows="5"
+                        className={styles.textArea}
+                        onChange={(e) => this.handleChange(e, 'description')}
+                        placeholder='Description'
+                    >
+
+                    </textarea>
+
+                    <DatePicker
+                        selected={this.state.date}
+                        onChange={this.handleDateChange}
+                        minDate={new Date()}
                     />
-                    <InputGroup.Append>
-                        <Button
-                            variant="outline-primary"
-                            onClick={addTask}
-                            disabled={inputValue === ''}
-                        >
-                            Add
-                                    </Button>
-                        <Button
-                            variant="outline-danger"
-                            disabled={!boolean}
-                            onClick={toggleConfirm}
-                        >
-                            <FontAwesomeIcon icon={faTrash} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        variant="success"
+                        onClick={() => addTask(this.state)}
+                        disabled={!this.state.title}
+                    >
+                        Add
                         </Button>
-                    </InputGroup.Append>
-                </InputGroup>
-            </>
+                    <Button variant="secondary" onClick={onClose}>
+                        Close
+                        </Button>
+                </Modal.Footer>
+            </Modal>
         )
     }
 }
@@ -43,11 +82,8 @@ class Input extends React.PureComponent {
 export default Input;
 
 Input.propTypes = {
-    boolean: PropTypes.number.isRequired,
-    inputValue: PropTypes.string.isRequired,
-    handleChange: PropTypes.func.isRequired,
-    addTask: PropTypes.func.isRequired,
-    handleKeyDown: PropTypes.func.isRequired,
-    toggleConfirm: PropTypes.func.isRequired
+    onClose: PropTypes.func,
+    addTask: PropTypes.func,
+    show: PropTypes.bool
 }
 

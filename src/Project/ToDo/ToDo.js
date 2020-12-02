@@ -6,16 +6,18 @@ import Task from '../Task/Task';
 import Input from '../Input/Input';
 import Confirm from '../Confirm/Confirm';
 import EditTask from '../EditTask/EditTask';
-import { Row, Col, Container } from 'react-bootstrap';
+import { Row, Col, Container, Button, InputGroup } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 class ToDo extends React.PureComponent {
     state = {
         tasks: [],
-        inputValue: '',
         boolean: 0,                           //boolean for disabled buutons
         showConfirm: false,
         editTask: null,
-        selectedTasks: new Set()
+        selectedTasks: new Set(),
+        addNewTask: false
     }
     componentDidMount() {
         fetch('http://localhost:3001/task')
@@ -31,19 +33,16 @@ class ToDo extends React.PureComponent {
             })
             .catch(err => console.log(err))
     }
-    handleChange = (event) => {
-        this.setState({
-            inputValue: event.target.value
-        });
-    }
-    addTask = () => {
+    addTask = (data) => {
         fetch('http://localhost:3001/task', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                title: this.state.inputValue
+                title: data.title,
+                description: data.description,
+                date: data.date.toISOString().slice(0, 10)
             })
         })
             .then(res => res.json())
@@ -54,13 +53,10 @@ class ToDo extends React.PureComponent {
                 const { tasks } = this.state;
                 this.setState({
                     tasks: [res, ...tasks],
-                    inputValue: ''
+                    addNewTask: false
                 });
             })
             .catch(err => console.log(err))
-    }
-    handleKeyDown = (e) => {
-        e.key === 'Enter' & this.state.inputValue !== '' && this.addTask();
     }
     // removing current task
     removeTask = (id) => {
@@ -148,8 +144,13 @@ class ToDo extends React.PureComponent {
             editTask: null
         })
     }
+    toogleAddNewTask = () => {
+        this.setState({
+            addNewTask: !this.state.addNewTask
+        })
+    }
     render() {
-        const { tasks, inputValue, boolean, showConfirm, editTask } = this.state;
+        const { tasks, boolean, showConfirm, editTask, addNewTask } = this.state;
         const task = tasks.map((element) => {
             return (
                 <Col className='mt-3' key={element._id} xs={12} sm={12} md={6} lg={4} xl={4}>
@@ -166,19 +167,26 @@ class ToDo extends React.PureComponent {
         return (
             <div>
                 <Container>
-                    <Row className={'p-3 d-flex justify-content-center'}>
-                        <Col xs={12} sm={12} md={12} lg={10} xl={10}>
-                            <Input
-                                boolean={boolean}
-                                inputValue={inputValue}
-                                handleChange={this.handleChange}
-                                handleKeyDown={this.handleKeyDown}
-                                addTask={this.addTask}
-                                toggleConfirm={this.toggleConfirm}
-                            />
-
-                        </Col>
-                    </Row>
+                    <InputGroup.Append className='d-flex justify-content-center pt-3'>
+                        {/* Button for adding tasks */}
+                        <Button
+                            variant="outline-primary"
+                            onClick={this.toogleAddNewTask}
+                            className='w-25'
+                        >
+                            Add
+                        </Button>
+                        {/* Button for removing selected tasks*/}
+                        <Button
+                            variant="outline-danger"
+                            disabled={!boolean}
+                            onClick={this.toggleConfirm}
+                            className='w-25'
+                            title='Select some tasks'
+                        >
+                            <FontAwesomeIcon icon={faTrash} />
+                        </Button>
+                    </InputGroup.Append>
                     <Row>
                         {task}
                     </Row>
@@ -194,6 +202,11 @@ class ToDo extends React.PureComponent {
                     onSave={this.saveEdit}
                     onClose={() => this.toogleEdit(null)}
                 />}
+                <Input
+                    onClose={this.toogleAddNewTask}
+                    show={addNewTask}
+                    addTask={this.addTask}
+                />
             </div >
         );
     };

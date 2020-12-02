@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Modal, InputGroup, FormControl } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
+
 export default class EditTask extends React.PureComponent {
     constructor(props) {
         super(props);
