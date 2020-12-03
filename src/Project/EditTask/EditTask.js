@@ -1,45 +1,40 @@
 import React from 'react';
 import { Button, Modal, InputGroup, FormControl } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 export default class EditTask extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            ...props.data
+            ...props.data,
+            date: props.data.date ? new Date(props.data.date) : new Date()
         }
     }
-    handleChage = (e) => {
+    handleChange = (e, type) => {
         this.setState({
-            title: e.target.value
+            [type]: e.target.value
         })
     }
     handleSave = () => {
-        fetch(`http://localhost:3001/task/${this.state._id}`, {
-            method: 'PUT',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                title: this.state.title
-            })
-        })
-            .then(res => res.json())
-            .then(res => {
-                if (res.error) {
-                    throw res.error;
-                }
-                if (!this.state.title) {
-                    return;
-                }
-                return this.props.onSave(this.state);
-            })
-            .catch(err => console.log(err))
-
+        if (!this.state.title) {
+            return;
+        }
+        const editedTask = {
+            ...this.state,
+            date: this.state.date.toISOString().slice(0, 10)
+        };
+        this.props.onSave(editedTask);
     }
     handleKeyUp = (e) => {
         e.key === 'Enter' && this.handleSave();
+    }
+    handleDateChange = (date) => {
+        this.setState({
+            date
+        })
     }
     render() {
         const { props } = this;
@@ -56,13 +51,28 @@ export default class EditTask extends React.PureComponent {
                         <FormControl
                             placeholder="Edit task"
                             aria-describedby="basic-addon2"
-                            onChange={this.handleChage}
+                            onChange={(e) => this.handleChange(e, 'title')}
                             onKeyUp={this.handleKeyUp}
                             value={this.state.title}
                         />
                         <InputGroup.Append>
                         </InputGroup.Append>
                     </InputGroup>
+                    <textarea
+                        rows="5"
+                        className='w-100'
+                        onChange={(e) => this.handleChange(e, 'description')}
+                        placeholder='Description'
+                        value={this.state.description}
+                    >
+
+                    </textarea>
+
+                    <DatePicker
+                        selected={this.state.date}
+                        onChange={this.handleDateChange}
+                        minDate={new Date()}
+                    />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button

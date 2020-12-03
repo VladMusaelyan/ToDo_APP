@@ -40,10 +40,9 @@ class Task extends React.PureComponent {
                                 />
                             </Col>
                         </Row>
-                        <Card.Text>
-                            {element.description}
-                        </Card.Text>
+                        <Card.Text>Description: {element.description}</Card.Text>
                         <Card.Text>Date: {element.date.slice(0, 10)}</Card.Text>
+                        <Card.Text>Created at: {element.created_at.slice(0, 10)}</Card.Text>
                         <div className='d-flex flex-row-reverse'>
                             <Button
                                 variant="warning"

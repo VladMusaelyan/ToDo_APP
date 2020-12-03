@@ -136,13 +136,31 @@ class ToDo extends React.PureComponent {
         })
     }
     saveEdit = (editState) => {
-        const tasks = [...this.state.tasks];
-        const findIndex = tasks.findIndex(element => element._id === editState._id);
-        tasks[findIndex] = editState;
-        this.setState({
-            tasks: tasks,
-            editTask: null
+        fetch(`http://localhost:3001/task/${editState._id}`, {
+            method: 'PUT',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(editState)
         })
+            .then((res) => res.json())
+            .then(response => {
+
+                if (response.error) {
+                    throw response.error;
+                }
+                const tasks = [...this.state.tasks];
+                const findIndex = tasks.findIndex(element => element._id === editState._id);
+                tasks[findIndex] = editState;
+                this.setState({
+                    tasks: tasks,
+                    editTask: null
+                })
+            })
+            .catch((error) => {
+                console.log("ToDo -> error", error)
+            });
+
     }
     toogleAddNewTask = () => {
         this.setState({
@@ -152,6 +170,7 @@ class ToDo extends React.PureComponent {
     render() {
         const { tasks, boolean, showConfirm, editTask, addNewTask } = this.state;
         const task = tasks.map((element) => {
+            // console.log(element);
             return (
                 <Col className='mt-3' key={element._id} xs={12} sm={12} md={6} lg={4} xl={4}>
                     <Task
@@ -173,6 +192,7 @@ class ToDo extends React.PureComponent {
                             variant="outline-primary"
                             onClick={this.toogleAddNewTask}
                             className='w-25'
+                            disabled={!!boolean}
                         >
                             Add
                         </Button>
