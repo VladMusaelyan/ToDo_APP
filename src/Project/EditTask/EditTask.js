@@ -1,30 +1,32 @@
 import React from 'react';
-import { Button, Modal, InputGroup, FormControl } from 'react-bootstrap';
+import { Button, Modal, FormControl } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-
 export default class EditTask extends React.PureComponent {
     constructor(props) {
         super(props);
+        const { date } = props.data;
+
         this.state = {
             ...props.data,
-            date: props.data.date ? new Date(props.data.date) : new Date()
-        }
+            date: date ? new Date(date) : new Date()
+        };
     }
     handleChange = (e, type) => {
         this.setState({
             [type]: e.target.value
-        })
-    }
+        });
+    };
     handleSave = () => {
-        if (!this.state.title) {
+        const { title, date } = this.state;
+        if (!title) {
             return;
         }
         const editedTask = {
             ...this.state,
-            date: this.state.date.toISOString().slice(0, 10)
+            date: date.toISOString().slice(0, 10)
         };
         this.props.onSave(editedTask);
     }
@@ -34,42 +36,42 @@ export default class EditTask extends React.PureComponent {
     handleDateChange = (date) => {
         this.setState({
             date
-        })
-    }
+        });
+    };
+
     render() {
-        const { props } = this;
+        const { onClose } = this.props;
+        const { title, description, date } = this.state;
         return (
             <Modal
                 show={true}
-                onHide={props.onClose}
-                centered>
+                onHide={onClose}
+                size='lg'
+                centered
+            >
                 <Modal.Header closeButton>
-                    <Modal.Title>Edit Task</Modal.Title>
+                    <Modal.Title>Edit task</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <InputGroup className='mb-3'>
-                        <FormControl
-                            placeholder="Edit task"
-                            aria-describedby="basic-addon2"
-                            onChange={(e) => this.handleChange(e, 'title')}
-                            onKeyUp={this.handleKeyUp}
-                            value={this.state.title}
-                        />
-                        <InputGroup.Append>
-                        </InputGroup.Append>
-                    </InputGroup>
+                    <FormControl
+                        placeholder="Title"
+                        onChange={(e) => this.handleChange(e, 'title')}
+                        onKeyUp={this.handleKeyUp}
+                        value={title}
+                        className='mb-1'
+                    />
                     <textarea
                         rows="5"
                         className='w-100'
+                        placeholder="Description"
+                        value={description}
                         onChange={(e) => this.handleChange(e, 'description')}
-                        placeholder='Description'
-                        value={this.state.description}
+                        onKeyUp={this.handleKeyUp}
                     >
-
                     </textarea>
 
                     <DatePicker
-                        selected={this.state.date}
+                        selected={date}
                         onChange={this.handleDateChange}
                         minDate={new Date()}
                     />
@@ -80,18 +82,22 @@ export default class EditTask extends React.PureComponent {
                         onClick={this.handleSave}
                     >
                         Save
-                        </Button>
-                    <Button variant="secondary" onClick={props.onClose}>
-                        Close
-                        </Button>
+            </Button>
+                    <Button
+                        variant="secondary"
+                        onClick={onClose}
+                    >
+                        Cancel
+            </Button>
                 </Modal.Footer>
             </Modal>
-        )
+
+        );
     }
 }
 
 EditTask.propTypes = {
-    data: PropTypes.object,
-    onClose: PropTypes.func,
-    onSave: PropTypes.func
-}
+    data: PropTypes.object.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired
+};

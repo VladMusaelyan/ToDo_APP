@@ -1,64 +1,62 @@
-/* eslint-disable react/style-prop-object */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable eqeqeq */
 import React from 'react';
 import Task from '../Task/Task';
 import Input from '../Input/Input';
 import Confirm from '../Confirm/Confirm';
 import EditTask from '../EditTask/EditTask';
-import { Row, Col, Container, Button, InputGroup } from 'react-bootstrap';
+import { Container, Row, Col, Button, InputGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 class ToDo extends React.PureComponent {
     state = {
         tasks: [],
-        boolean: 0,                           //boolean for disabled buutons
+        selectedTasks: new Set(),
         showConfirm: false,
         editTask: null,
-        selectedTasks: new Set(),
         addNewTask: false
-    }
+    };
     componentDidMount() {
-        fetch('http://localhost:3001/task')
-            .then(res => res.json())
+        fetch("http://localhost:3001/task", {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json"
+            },
+        })
+            .then((res) => res.json())
             .then(res => {
                 if (res.error) {
                     throw res.error;
                 }
                 this.setState({
-                    tasks: res,
-                    inputValue: ''
+                    tasks: res
                 });
             })
-            .catch(err => console.log(err))
+            .catch((err) => console.log(err));
     }
     addTask = (data) => {
-        fetch('http://localhost:3001/task', {
+        fetch("http://localhost:3001/task", {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                title: data.title,
-                description: data.description,
-                date: data.date.toISOString().slice(0, 10)
-            })
+            body: JSON.stringify(data)
         })
-            .then(res => res.json())
+            .then((res) => res.json())
             .then(res => {
                 if (res.error) {
                     throw res.error;
                 }
-                const { tasks } = this.state;
+                const tasks = [...this.state.tasks];
                 this.setState({
                     tasks: [res, ...tasks],
                     addNewTask: false
                 });
+
             })
-            .catch(err => console.log(err))
-    }
-    // removing current task
+            .catch((err) => console.log(err));
+
+    };
+    // removing current tas
     removeTask = (id) => {
         fetch(`http://localhost:3001/task/${id}`, {
             method: 'DELETE',
@@ -66,7 +64,7 @@ class ToDo extends React.PureComponent {
                 "Content-Type": "application/json"
             }
         })
-            .then(res => res.json())
+            .then((res) => res.json())
             .then(res => {
                 if (res.error) {
                     throw res.error;
@@ -75,110 +73,102 @@ class ToDo extends React.PureComponent {
                 this.setState({
                     tasks: removeTask
                 });
+
             })
             .catch(err => console.log(err))
-
-    }
-    // removing some tasks
+    };
+    //removing some tasks
     removeTasks = () => {
         const body = {
             tasks: [...this.state.selectedTasks]
         };
-        fetch('http://localhost:3001/task', {
+        fetch(`http://localhost:3001/task`, {
             method: 'PATCH',
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(body)
         })
-            .then(res => res.json())
+            .then((res) => res.json())
             .then(res => {
                 if (res.error) {
                     throw res.error;
                 }
-                const removeTasks = this.state.tasks.filter(element => !element.checked);
+                let tasks = [...this.state.tasks];
+                this.state.selectedTasks.forEach((id) => {
+                    tasks = tasks.filter((task) => task._id !== id);
+                });
                 this.setState({
-                    tasks: removeTasks,
-                    boolean: 0,
+                    tasks,
+                    selectedTasks: new Set(),
                     showConfirm: false
                 });
             })
-    }
+            .catch((err) => console.log(err));
+    };
     selectedTask = (id) => {
-        const { tasks, boolean, selectedTasks } = this.state;
-        tasks.forEach(element => {
-            if (element._id === id) {
-                element.checked = !element.checked;
-                if (element.checked === true) {
-                    this.setState({
-                        boolean: boolean + 1,
-                        selectedTasks: selectedTasks.add(id)
-                    })
-                } else {
-                    if (selectedTasks.has(id)) {
-                        this.setState({
-                            boolean: boolean - 1,
-                            selectedTask: selectedTasks.delete(id)
-                        })
-                    }
-                }
-            }
+        const selectedTasks = new Set(this.state.selectedTasks);
+        if (selectedTasks.has(id)) {
+            selectedTasks.delete(id);
+        }
+        else {
+            selectedTasks.add(id);
+        }
+        this.setState({
+            selectedTasks
         });
-    }
+    };
     toggleConfirm = () => {
         this.setState({
             showConfirm: !this.state.showConfirm
         });
     }
-    toogleEdit = (element) => {
+    toogleEdit = (task) => {
         this.setState({
-            editTask: element
-        })
+            editTask: task
+        });
     }
-    saveEdit = (editState) => {
-        fetch(`http://localhost:3001/task/${editState._id}`, {
+    saveTask = (editedTask) => {
+        fetch(`http://localhost:3001/task/${editedTask._id}`, {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(editState)
+            body: JSON.stringify(editedTask)
         })
             .then((res) => res.json())
-            .then(response => {
+            .then(res => {
 
-                if (response.error) {
-                    throw response.error;
+                if (res.error) {
+                    throw res.error;
                 }
                 const tasks = [...this.state.tasks];
-                const findIndex = tasks.findIndex(element => element._id === editState._id);
-                tasks[findIndex] = editState;
+                const findIndex = tasks.findIndex((task) => task._id === editedTask._id);
+                tasks[findIndex] = res;
                 this.setState({
                     tasks: tasks,
                     editTask: null
-                })
+                });
             })
-            .catch((error) => {
-                console.log("ToDo -> error", error)
-            });
+            .catch((err) => console.log(err));
 
-    }
+    };
     toogleAddNewTask = () => {
         this.setState({
             addNewTask: !this.state.addNewTask
-        })
+        });
     }
     render() {
-        const { tasks, boolean, showConfirm, editTask, addNewTask } = this.state;
-        const task = tasks.map((element) => {
-            // console.log(element);
+        const { tasks, selectedTasks, showConfirm, editTask, addNewTask } = this.state;
+        const task = tasks.map(element => {
             return (
                 <Col className='mt-3' key={element._id} xs={12} sm={12} md={6} lg={4} xl={4}>
                     <Task
-                        element={element}
+                        data={element}
                         onRemoveTask={this.removeTask}
-                        toogleEdit={() => this.toogleEdit(element)}
                         selectedTask={this.selectedTask}
-                        disabled={!!boolean}
+                        disabled={!!selectedTasks.size}
+                        onEdit={this.toogleEdit}
                     />
                 </Col>
             )
@@ -191,16 +181,16 @@ class ToDo extends React.PureComponent {
                         <Button
                             variant="outline-primary"
                             onClick={this.toogleAddNewTask}
+                            disabled={!!selectedTasks.size}
                             className='w-25'
-                            disabled={!!boolean}
                         >
                             Add
-                        </Button>
+                            </Button>
                         {/* Button for removing selected tasks*/}
                         <Button
                             variant="outline-danger"
-                            disabled={!boolean}
                             onClick={this.toggleConfirm}
+                            disabled={!selectedTasks.size}
                             className='w-25'
                             title='Select some tasks'
                         >
@@ -214,22 +204,26 @@ class ToDo extends React.PureComponent {
                 <Confirm
                     onSubmit={this.removeTasks}
                     onClose={this.toggleConfirm}
+                    count={selectedTasks.size}
                     show={showConfirm}
-                    count={boolean}
                 />
-                {!!editTask && <EditTask
-                    data={editTask}
-                    onSave={this.saveEdit}
-                    onClose={() => this.toogleEdit(null)}
-                />}
+                {
+                    !!editTask &&
+                    <EditTask
+                        data={editTask}
+                        onSave={this.saveTask}
+                        onClose={() => this.toogleEdit(null)}
+                    />
+                }
                 <Input
+                    onAdd={this.addTask}
                     onClose={this.toogleAddNewTask}
                     show={addNewTask}
-                    addTask={this.addTask}
                 />
-            </div >
+            </div>
         );
     };
+
 }
 
 export default ToDo;

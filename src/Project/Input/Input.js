@@ -1,63 +1,71 @@
 import React from 'react';
-import { InputGroup, FormControl, Modal, Button } from 'react-bootstrap';
+import { FormControl, Button, Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from './inputstyles.module.css';
 
+export default class AddTask extends React.PureComponent {
 
-class Input extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = {
-            title: '',
-            description: '',
-            date: new Date()
-        }
-    }
-    handleChange = (event, type) => {
+    state = {
+        title: '',
+        description: '',
+        date: new Date()
+    };
+    handleChange = (e, type) => {
         this.setState({
-            [type]: event.target.value
+            [type]: e.target.value
         });
-    }
+    };
     handleKeyDown = (e) => {
-        e.key === 'Enter' & this.state.inputValue !== '' && this.props.addTask(this.state);
-    }
+        e.key === 'Enter' & this.state.title !== '' && this.addTask();
+    };
     handleDateChange = (date) => {
         this.setState({
             date
         });
     };
+    addTask = () => {
+        const { title, description, date } = this.state;
+        if (!title) {
+            return;
+        }
+        const task = {
+            title,
+            description,
+            date: date.toISOString().slice(0, 10)
+        };
+        this.props.onAdd(task);
+    };
     render() {
-        const { onClose, show, addTask } = this.props;
+        const { title, date } = this.state;
+        const { show, onClose } = this.props;
         return (
             <Modal
                 show={show}
                 onHide={onClose}
+                size='lg'
                 centered
-                size={"lg"}>
+            >
                 <Modal.Header closeButton>
-                    <Modal.Title>Edit Task</Modal.Title>
+                    <Modal.Title>Add new task</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <InputGroup className='mb-3'>
-                        <FormControl
-                            placeholder="Title"
-                            onChange={(e) => this.handleChange(e, 'title')}
-                            onKeyDown={this.handleKeyDown}
-                        />
-                    </InputGroup>
+                    <FormControl
+                        placeholder="Title"
+                        onChange={(e) => this.handleChange(e, 'title')}
+                        onKeyDown={this.handleKeyDown}
+                        className='mb-3'
+                    />
                     <textarea
                         rows="5"
                         className={styles.textArea}
+                        placeholder="Description"
                         onChange={(e) => this.handleChange(e, 'description')}
-                        placeholder='Description'
                     >
-
                     </textarea>
-
                     <DatePicker
-                        selected={this.state.date}
+                        selected={date}
                         onChange={this.handleDateChange}
                         minDate={new Date()}
                     />
@@ -65,25 +73,25 @@ class Input extends React.PureComponent {
                 <Modal.Footer>
                     <Button
                         variant="success"
-                        onClick={() => addTask(this.state)}
-                        disabled={!this.state.title}
+                        onClick={this.addTask}
+                        disabled={!title}
                     >
                         Add
-                        </Button>
-                    <Button variant="secondary" onClick={onClose}>
-                        Close
-                        </Button>
+                </Button>
+                    <Button
+                        variant="secondary"
+                        onClick={onClose}
+                    >
+                        Cancel
+                </Button>
                 </Modal.Footer>
             </Modal>
-        )
+        );
     }
 }
 
-export default Input;
-
-Input.propTypes = {
-    onClose: PropTypes.func,
-    addTask: PropTypes.func,
+AddTask.propTypes = {
+    onClose: PropTypes.func.isRequired,
+    onAdd: PropTypes.func.isRequired,
     show: PropTypes.bool
-}
-
+};
