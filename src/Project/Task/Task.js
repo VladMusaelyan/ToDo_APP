@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Button, Card, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 class Task extends React.PureComponent {
     state = {
@@ -24,10 +25,15 @@ class Task extends React.PureComponent {
                 <Card.Body>
                     <Row>
                         <Col xs={10} sm={10} md={10} lg={10} xl={10}>
-                            <Card.Title>
-                                {element.title.slice(0, 10)}
-                                {element.title.length > 10 && '...'}
-                            </Card.Title>
+                            <Link
+                                to={`/task/${element._id}`}
+                                className='text-decoration-none text-dark'
+                            >
+                                <Card.Title>
+                                    {element.title.slice(0, 10)}
+                                    {element.title.length > 10 && '...'}
+                                </Card.Title>
+                            </Link>
                         </Col>
                         <Col xs={2} sm={2} md={2} lg={2} xl={2}>
                             <input
