@@ -1,0 +1,6 @@
+.notFound{
+    background-image: url('../../../assets/images/404-error.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+}

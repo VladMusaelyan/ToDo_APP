@@ -11,41 +11,49 @@ class Task extends React.PureComponent {
         checked: false
     };
 
-    handleCheck = () => {
+    handleCheck = (e) => {
+        e.stopPropagation();
+
         this.setState({
             checked: !this.state.checked
         });
         this.props.selectedTask(this.props.data._id);
     };
+    handleClick = (e) => {
+        this.props.disabled && e.preventDefault();
+    }
     render() {
         const element = this.props.data;
         const { disabled } = this.props;
         return (
             <Card className={this.state.checked && 'border border-danger'}>
-                <Card.Body>
-                    <Row>
-                        <Col xs={10} sm={10} md={10} lg={10} xl={10}>
-                            <Link
-                                to={`/task/${element._id}`}
-                                className='text-decoration-none text-dark'
-                            >
+                <Link
+                    to={`/task/${element._id}`}
+                    className={styles.link}
+                    onClick={this.handleClick}
+                >
+                    <Card.Body>
+                        <Row>
+                            <Col xs={10} sm={10} md={10} lg={10} xl={10}>
                                 <Card.Title>
                                     {element.title.slice(0, 10)}
                                     {element.title.length > 10 && '...'}
                                 </Card.Title>
-                            </Link>
-                        </Col>
-                        <Col xs={2} sm={2} md={2} lg={2} xl={2}>
-                            <input
-                                type='checkbox'
-                                onClick={this.handleCheck}
-                                className={styles.checkbox}
-                            />
-                        </Col>
-                    </Row>
-                    <Card.Text>Description: {element.description}</Card.Text>
-                    <Card.Text>Date: {element.date.slice(0, 10)}</Card.Text>
-                    <Card.Text>Created at: {element.created_at.slice(0, 10)}</Card.Text>
+                            </Col>
+                            <Col xs={2} sm={2} md={2} lg={2} xl={2}>
+                                <input
+                                    type='checkbox'
+                                    onClick={this.handleCheck}
+                                    className={styles.checkbox}
+                                />
+                            </Col>
+                        </Row>
+                        <Card.Text>Description: {element.description}</Card.Text>
+                        <Card.Text>Date: {element.date.slice(0, 10)}</Card.Text>
+                        <Card.Text>Created at: {element.created_at.slice(0, 10)}</Card.Text>
+                    </Card.Body >
+                </Link>
+                <Card.Footer>
                     <div className='d-flex flex-row-reverse'>
                         <Button
                             variant="warning"
@@ -63,7 +71,7 @@ class Task extends React.PureComponent {
                             <FontAwesomeIcon icon={faTrash} />
                         </Button>
                     </div>
-                </Card.Body >
+                </Card.Footer>
             </Card >
         );
     }

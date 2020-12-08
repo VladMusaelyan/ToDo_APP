@@ -6,7 +6,6 @@ import EditTask from '../../EditTask/EditTask';
 import { Container, Row, Col, Button, InputGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
 
 class ToDo extends React.PureComponent {
     state = {
