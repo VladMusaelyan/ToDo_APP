@@ -1,6 +1,6 @@
 import React from 'react';
 import Task from '../../Task/Task';
-import Input from '../../Input/Input';
+import Input from '../../AddTask/AddTask';
 import Confirm from '../../Confirm/Confirm';
 import EditTask from '../../EditTask/EditTask';
 import { Container, Row, Col, Button, InputGroup } from 'react-bootstrap';
@@ -215,11 +215,13 @@ class ToDo extends React.PureComponent {
                         onClose={() => this.toogleEdit(null)}
                     />
                 }
-                <Input
-                    onAdd={this.addTask}
-                    onClose={this.toogleAddNewTask}
-                    show={addNewTask}
-                />
+                {
+                    addNewTask &&
+                    <Input
+                        onAdd={this.addTask}
+                        onClose={this.toogleAddNewTask}
+                    />
+                }
             </div>
         );
     };

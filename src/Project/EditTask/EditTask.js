@@ -1,99 +1,108 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Button, Modal, FormControl } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-export default class EditTask extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        const { date } = props.data;
+export default function EditTask(props) {
 
-        this.state = {
-            ...props.data,
-            date: date ? new Date(date) : new Date()
-        };
-    }
-    handleChange = (e, type) => {
-        this.setState({
+    const [state, setState] = useState({
+        ...props.data,
+        date: props.date ? new Date(props.date) : new Date()
+    });
+
+    const titleRef = useRef(null);
+
+    const descriptionRef = useRef(null);
+
+    useEffect(() => {
+        titleRef.current.focus();
+    }, []);
+
+    const handleChange = (e, type) => {
+        setState({
+            ...state,
             [type]: e.target.value
         });
     };
-    handleSave = () => {
-        const { title, date } = this.state;
+
+    const handleSave = () => {
+        const { title, date } = state;
         if (!title) {
             return;
         }
         const editedTask = {
-            ...this.state,
+            ...state,
             date: date.toISOString().slice(0, 10)
         };
-        this.props.onSave(editedTask);
-    }
-    handleKeyUp = (e) => {
-        e.key === 'Enter' && this.handleSave();
-    }
-    handleDateChange = (date) => {
-        this.setState({
-            date
+        props.onSave(editedTask);
+    };
+
+    const handleKeyUp = (e) => {
+        e.key === 'Enter' && handleSave();
+    };
+
+    const handleDateChange = (date) => {
+        setState({
+            ...state,
+            date: date
         });
     };
 
-    render() {
-        const { onClose } = this.props;
-        const { title, description, date } = this.state;
-        return (
-            <Modal
-                show={true}
-                onHide={onClose}
-                size='lg'
-                centered
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>Edit task</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <FormControl
-                        placeholder="Title"
-                        onChange={(e) => this.handleChange(e, 'title')}
-                        onKeyUp={this.handleKeyUp}
-                        value={title}
-                        className='mb-1'
-                    />
-                    <textarea
-                        rows="5"
-                        className='w-100'
-                        placeholder="Description"
-                        value={description}
-                        onChange={(e) => this.handleChange(e, 'description')}
-                        onKeyUp={this.handleKeyUp}
-                    >
-                    </textarea>
+    const { onClose } = props;
+    const { title, description, date } = state;
+    return (
+        <Modal
+            show={true}
+            onHide={onClose}
+            size='lg'
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title>Edit task</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <FormControl
+                    placeholder="Title"
+                    onChange={(e) => handleChange(e, 'title')}
+                    onKeyUp={handleKeyUp}
+                    value={title}
+                    className='mb-1'
+                    ref={titleRef}
+                />
+                <textarea
+                    rows="5"
+                    className='w-100'
+                    placeholder="Description"
+                    value={description}
+                    onChange={(e) => handleChange(e, 'description')}
+                    onKeyUp={handleKeyUp}
+                    ref={descriptionRef}
+                />
 
-                    <DatePicker
-                        selected={date}
-                        onChange={this.handleDateChange}
-                        minDate={new Date()}
-                    />
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button
-                        variant="success"
-                        onClick={this.handleSave}
-                    >
-                        Save
+                <DatePicker
+                    selected={date}
+                    onChange={handleDateChange}
+                    minDate={new Date()}
+                />
+            </Modal.Body>
+            <Modal.Footer>
+                <Button
+                    variant="success"
+                    onClick={handleSave}
+                >
+                    Save
             </Button>
-                    <Button
-                        variant="secondary"
-                        onClick={onClose}
-                    >
-                        Cancel
+                <Button
+                    variant="secondary"
+                    onClick={onClose}
+                >
+                    Cancel
             </Button>
-                </Modal.Footer>
-            </Modal>
+            </Modal.Footer>
+        </Modal>
 
-        );
-    }
+    );
 }
 
 EditTask.propTypes = {
