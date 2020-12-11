@@ -9,6 +9,7 @@ import NavBar from './Project/NavBar/NavBar';
 import TaskPage from './Project/Pages/TaskPage/TaskPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Route, Switch, Redirect } from 'react-router-dom';
+import './Example/test';
 
 function App() {
   return (
