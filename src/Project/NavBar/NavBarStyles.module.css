@@ -8,6 +8,6 @@
 }
 
 .link:hover{
-    color: black;
-    transition: .2s all;
+    color: rgba(20, 128, 255, .7);
+    transition: .8s all;
 }

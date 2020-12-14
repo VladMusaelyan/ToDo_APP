@@ -94,32 +94,32 @@
 
 
 
-function diamond(n) {
-    let x;
-    if (n % 2 === 0) {
-        x = 2;
-    }
-    else {
-        x = 1;
-    }
-    let str = '';
-    for (let i = 0; i < (n - x) / 2; i++) {
-        for (let j = 1; j < n - i; j++) {
-            str = str + ' ';
-        }
-        for (let k = 1; k <= (2 * i + 1); k++) {
-            str = str + '*';
-        }
-        str += '\n';
-    }
-    for (let i = (n - x) / 2; i >= 0; i--) {
-        for (let j = 1; j < n - i; j++) {
-            str = str + ' ';
-        }
-        for (let k = 1; k <= (2 * i + 1); k++) {
-            str = str + '*';
-        }
-        str += '\n';
-    }
-}
-diamond(7);
+// function diamond(n) {
+//     let x;
+//     if (n % 2 === 0) {
+//         x = 2;
+//     }
+//     else {
+//         x = 1;
+//     }
+//     let str = '';
+//     for (let i = 0; i < (n - x) / 2; i++) {
+//         for (let j = 1; j < n - i; j++) {
+//             str = str + ' ';
+//         }
+//         for (let k = 1; k <= (2 * i + 1); k++) {
+//             str = str + '*';
+//         }
+//         str += '\n';
+//     }
+//     for (let i = (n - x) / 2; i >= 0; i--) {
+//         for (let j = 1; j < n - i; j++) {
+//             str = str + ' ';
+//         }
+//         for (let k = 1; k <= (2 * i + 1); k++) {
+//             str = str + '*';
+//         }
+//         str += '\n';
+//     }
+// }
+// diamond(7);

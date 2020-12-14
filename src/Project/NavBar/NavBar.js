@@ -8,6 +8,7 @@ export default function NavBar() {
     return (
         <Navbar
             bg="light"
+            variant="light"
             expand="lg"
         >
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
