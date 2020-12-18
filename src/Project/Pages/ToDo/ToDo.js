@@ -1,11 +1,12 @@
 import React from 'react';
 import Task from '../../Task/Task';
-import Input from '../../AddTask/AddTask';
+import AddTask from '../../AddTask/AddTask';
 import Confirm from '../../Confirm/Confirm';
 import EditTask from '../../EditTask/EditTask';
 import { Container, Row, Col, Button, InputGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import Spinner from '../../../assets/functions/Spinner';
 
 class ToDo extends React.PureComponent {
     state = {
@@ -198,7 +199,7 @@ class ToDo extends React.PureComponent {
                         </Button>
                     </InputGroup.Append>
                     <Row>
-                        {task}
+                        {!!tasks ? task : <Spinner />}
                     </Row>
                 </Container>
                 <Confirm
@@ -217,7 +218,7 @@ class ToDo extends React.PureComponent {
                 }
                 {
                     addNewTask &&
-                    <Input
+                    <AddTask
                         onAdd={this.addTask}
                         onClose={this.toogleAddNewTask}
                     />
