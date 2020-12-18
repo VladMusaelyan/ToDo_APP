@@ -11,9 +11,9 @@ export default function EditTask(props) {
         date: props.date ? new Date(props.date) : new Date()
     });
 
-    const titleRef = useRef(null);
+    const titleRef = useRef(props.title);
 
-    const descriptionRef = useRef(null);
+    const descriptionRef = useRef(props.description);
 
     useEffect(() => {
         titleRef.current.focus();

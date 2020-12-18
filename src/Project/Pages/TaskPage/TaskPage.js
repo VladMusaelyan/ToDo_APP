@@ -1,9 +1,10 @@
 import React from 'react';
 import styles from './TaskPage.module.css';
-import { Card, Spinner, Row, Col, Button } from 'react-bootstrap';
+import { Card, Row, Col, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import EditTask from '../../EditTask/EditTask';
+import Spinner from '../../../assets/functions/Spinner';
 
 export default class TaskPage extends React.PureComponent {
     constructor(props) {
@@ -110,11 +111,9 @@ export default class TaskPage extends React.PureComponent {
                             </Row>
                         </Card.Body>
                     </Card>
-                    : <div className={styles.spiner}>
-                        <Spinner
-                            animation="border"
-                        />
-                    </div>}
+                    : <Spinner />
+                }
+
                 {this.state.editTask && <EditTask
                     data={this.state.data}
                     onSave={this.saveTask}

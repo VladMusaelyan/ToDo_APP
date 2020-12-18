@@ -1,0 +1,11 @@
+.spiner{
+    color: #007BFF;
+    background: #fff;
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
