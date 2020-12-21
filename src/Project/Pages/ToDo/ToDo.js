@@ -7,106 +7,40 @@ import { Container, Row, Col, Button, InputGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Spinner from '../../../assets/functions/Spinner';
+import { connect } from 'react-redux';
+import { getTasks, removeTask, removeTasks, editTask } from '../../../ReduxStore/actions';
+
 
 class ToDo extends React.PureComponent {
+
     state = {
-        tasks: [],
         selectedTasks: new Set(),
         showConfirm: false,
         editTask: null,
         addNewTask: false
     };
+
     componentDidMount() {
-        fetch("http://localhost:3001/task", {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json"
-            },
-        })
-            .then((res) => res.json())
-            .then(res => {
-                if (res.error) {
-                    throw res.error;
-                }
-                this.setState({
-                    tasks: res
-                });
-            })
-            .catch((err) => console.log(err));
+        this.props.getTasks();
     }
-    addTask = (data) => {
-        fetch("http://localhost:3001/task", {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-            .then((res) => res.json())
-            .then(res => {
-                if (res.error) {
-                    throw res.error;
-                }
-                const tasks = [...this.state.tasks];
-                this.setState({
-                    tasks: [res, ...tasks],
-                    addNewTask: false
-                });
 
-            })
-            .catch((err) => console.log(err));
-
-    };
-    // removing current tas
+    // removing current task
     removeTask = (id) => {
-        fetch(`http://localhost:3001/task/${id}`, {
-            method: 'DELETE',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-            .then((res) => res.json())
-            .then(res => {
-                if (res.error) {
-                    throw res.error;
-                }
-                const removeTask = this.state.tasks.filter(element => element._id !== id);
-                this.setState({
-                    tasks: removeTask
-                });
-
-            })
-            .catch(err => console.log(err))
+        this.props.removeTask(id);
     };
+
     //removing some tasks
     removeTasks = () => {
         const body = {
             tasks: [...this.state.selectedTasks]
         };
-        fetch(`http://localhost:3001/task`, {
-            method: 'PATCH',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(body)
-        })
-            .then((res) => res.json())
-            .then(res => {
-                if (res.error) {
-                    throw res.error;
-                }
-                let tasks = [...this.state.tasks];
-                this.state.selectedTasks.forEach((id) => {
-                    tasks = tasks.filter((task) => task._id !== id);
-                });
-                this.setState({
-                    tasks,
-                    selectedTasks: new Set(),
-                    showConfirm: false
-                });
-            })
-            .catch((err) => console.log(err));
+        this.props.removeTasks(body);
+        this.setState({
+            selectedTasks: new Set(),
+            showConfirm: false
+        });
     };
+
     selectedTask = (id) => {
         const selectedTasks = new Set(this.state.selectedTasks);
         if (selectedTasks.has(id)) {
@@ -119,49 +53,37 @@ class ToDo extends React.PureComponent {
             selectedTasks
         });
     };
+
     toggleConfirm = () => {
         this.setState({
             showConfirm: !this.state.showConfirm
         });
-    }
+    };
+
     toogleEdit = (task) => {
         this.setState({
             editTask: task
         });
-    }
-    saveTask = (editedTask) => {
-        fetch(`http://localhost:3001/task/${editedTask._id}`, {
-            method: 'PUT',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(editedTask)
-        })
-            .then((res) => res.json())
-            .then(res => {
-
-                if (res.error) {
-                    throw res.error;
-                }
-                const tasks = [...this.state.tasks];
-                const findIndex = tasks.findIndex((task) => task._id === editedTask._id);
-                tasks[findIndex] = res;
-                this.setState({
-                    tasks: tasks,
-                    editTask: null
-                });
-            })
-            .catch((err) => console.log(err));
-
     };
+
+    saveTask = (editedTask) => {
+        this.props.editTask(editedTask);
+        this.setState({
+            editTask: null
+        });
+    };
+
     toogleAddNewTask = () => {
         this.setState({
             addNewTask: !this.state.addNewTask
         });
     }
+
     render() {
-        const { tasks, selectedTasks, showConfirm, editTask, addNewTask } = this.state;
-        const task = tasks.map(element => {
+
+        const { selectedTasks, showConfirm, editTask, addNewTask } = this.state;
+
+        const task = this.props.tasks.map(element => {
             return (
                 <Col className='mt-3' key={element._id} xs={12} sm={12} md={6} lg={4} xl={4}>
                     <Task
@@ -172,7 +94,7 @@ class ToDo extends React.PureComponent {
                         onEdit={this.toogleEdit}
                     />
                 </Col>
-            )
+            );
         });
         return (
             <div>
@@ -199,7 +121,7 @@ class ToDo extends React.PureComponent {
                         </Button>
                     </InputGroup.Append>
                     <Row>
-                        {!!tasks ? task : <Spinner />}
+                        {!!this.props.tasks ? task : <Spinner />}
                     </Row>
                 </Container>
                 <Confirm
@@ -219,8 +141,8 @@ class ToDo extends React.PureComponent {
                 {
                     addNewTask &&
                     <AddTask
-                        onAdd={this.addTask}
                         onClose={this.toogleAddNewTask}
+                        toggleAddTask={this.toogleAddNewTask}
                     />
                 }
             </div>
@@ -229,4 +151,17 @@ class ToDo extends React.PureComponent {
 
 }
 
-export default ToDo;
+const mapStateToProps = (state) => {
+    return {
+        tasks: state.tasks
+    }
+}
+
+const mapDispatchToProps = {
+    getTasks,
+    removeTask,
+    removeTasks,
+    editTask
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ToDo);

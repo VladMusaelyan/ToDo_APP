@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from './inputstyles.module.css';
+import { connect } from 'react-redux';
+import { addTask } from '../../ReduxStore/actions';
 
-export default function AddTask(props) {
+function AddTask(props) {
 
     const [date, setDate] = useState(new Date());
 
@@ -34,7 +36,8 @@ export default function AddTask(props) {
             description: descriptionRef.current.value,
             date: date.toISOString().slice(0, 10)
         };
-        props.onAdd(task);
+        props.addTask(task);
+        props.toggleAddTask();
     };
 
     const { onClose } = props;
@@ -83,9 +86,15 @@ export default function AddTask(props) {
             </Modal.Footer>
         </Modal>
     );
-}
+};
 
 AddTask.propTypes = {
     onClose: PropTypes.func.isRequired,
-    onAdd: PropTypes.func.isRequired
+    toggleAddTask: PropTypes.func.isRequired
 };
+
+const mapDispatchToProps = {
+    addTask
+}
+
+export default connect(null, mapDispatchToProps)(AddTask);
