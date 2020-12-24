@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FormControl, Button, Modal } from 'react-bootstrap';
-import PropTypes from 'prop-types';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from './inputstyles.module.css';
 import { connect } from 'react-redux';
-import { addTask } from '../../ReduxStore/actions';
+import { addTask, toggle } from '../../ReduxStore/actions';
+import { TOGGLE_ADD_TASK } from '../../ReduxStore/types';
 
 function AddTask(props) {
 
@@ -18,10 +18,6 @@ function AddTask(props) {
     useEffect(() => {
         titleRef.current.focus();
     }, []);
-
-    const handleKeyDown = (e) => {
-        e.key === 'Enter' & titleRef.current.value !== '' && addTask();
-    };
 
     const handleDateChange = (date) => {
         setDate(date);
@@ -37,14 +33,12 @@ function AddTask(props) {
             date: date.toISOString().slice(0, 10)
         };
         props.addTask(task);
-        props.toggleAddTask();
     };
 
-    const { onClose } = props;
     return (
         <Modal
             show={true}
-            onHide={onClose}
+            onHide={() => props.toggle(TOGGLE_ADD_TASK)}
             size='lg'
             centered
         >
@@ -54,7 +48,6 @@ function AddTask(props) {
             <Modal.Body>
                 <FormControl
                     placeholder="Title"
-                    onKeyDown={handleKeyDown}
                     className='mb-3'
                     ref={titleRef}
                 />
@@ -79,7 +72,7 @@ function AddTask(props) {
                 </Button>
                 <Button
                     variant="secondary"
-                    onClick={onClose}
+                    onClick={() => props.toggle(TOGGLE_ADD_TASK)}
                 >
                     Cancel
                 </Button>
@@ -88,13 +81,9 @@ function AddTask(props) {
     );
 };
 
-AddTask.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    toggleAddTask: PropTypes.func.isRequired
-};
-
 const mapDispatchToProps = {
-    addTask
-}
+    addTask,
+    toggle
+};
 
 export default connect(null, mapDispatchToProps)(AddTask);

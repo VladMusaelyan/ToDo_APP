@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import styles from './TaskStyles.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Button, Card, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { removeTask, selectedTask, editTask } from '../../ReduxStore/actions';
+// import { TOGGLE_EDIT_TASK } from '../../ReduxStore/types';
 
-export default function Task(props) {
+function Task(props) {
 
     const [checked, setChecked] = useState(false);
 
@@ -55,13 +58,13 @@ export default function Task(props) {
                         variant="warning"
                         disabled={disabled}
                         className='ml-3'
-                        onClick={() => props.onEdit(element)}
+                        onClick={() => props.editTask(element)}
                     >
                         <FontAwesomeIcon icon={faEdit} />
                     </Button>
                     <Button
                         variant="danger"
-                        onClick={() => props.onRemoveTask(element._id)}
+                        onClick={() => props.removeTask(element._id)}
                         disabled={disabled}
                     >
                         <FontAwesomeIcon icon={faTrash} />
@@ -74,8 +77,19 @@ export default function Task(props) {
 
 
 Task.propTypes = {
-    data: PropTypes.object.isRequired,
-    onRemoveTask: PropTypes.func.isRequired,
-    selectedTask: PropTypes.func.isRequired,
-    disabled: PropTypes.bool.isRequired
+    data: PropTypes.object.isRequired
 };
+
+const mapStateToProps = (state) => {
+    return {
+        disabled: !!state.selectedTasks.length
+    };
+};
+
+const mapDispatchToProps = {
+    removeTask,
+    selectedTask,
+    editTask
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(memo(Task));

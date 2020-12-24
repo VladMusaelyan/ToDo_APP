@@ -1,23 +1,25 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, memo } from 'react';
 import { Button, Modal, FormControl } from 'react-bootstrap';
-import PropTypes from 'prop-types';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { connect } from 'react-redux';
+import { toggle, saveEditedTask } from '../../ReduxStore/actions';
+import { TOGGLE_EDIT_TASK } from '../../ReduxStore/types';
 
-export default function EditTask(props) {
+function EditTask(props) {
 
     const [state, setState] = useState({
         ...props.data,
         date: props.date ? new Date(props.date) : new Date()
     });
 
-    const titleRef = useRef(props.title);
+    const titleRef = useRef(state.title);
 
     const descriptionRef = useRef(props.description);
 
     useEffect(() => {
         titleRef.current.focus();
-    }, []);
+    }, [])
 
     const handleChange = (e, type) => {
         setState({
@@ -35,11 +37,7 @@ export default function EditTask(props) {
             ...state,
             date: date.toISOString().slice(0, 10)
         };
-        props.onSave(editedTask);
-    };
-
-    const handleKeyUp = (e) => {
-        e.key === 'Enter' && handleSave();
+        props.saveEditedTask(editedTask);
     };
 
     const handleDateChange = (date) => {
@@ -49,12 +47,11 @@ export default function EditTask(props) {
         });
     };
 
-    const { onClose } = props;
     const { title, description, date } = state;
     return (
         <Modal
             show={true}
-            onHide={onClose}
+            onHide={() => props.toggle(TOGGLE_EDIT_TASK)}
             size='lg'
             centered
         >
@@ -65,7 +62,6 @@ export default function EditTask(props) {
                 <FormControl
                     placeholder="Title"
                     onChange={(e) => handleChange(e, 'title')}
-                    onKeyUp={handleKeyUp}
                     value={title}
                     className='mb-1'
                     ref={titleRef}
@@ -74,9 +70,8 @@ export default function EditTask(props) {
                     rows="5"
                     className='w-100'
                     placeholder="Description"
-                    value={description}
                     onChange={(e) => handleChange(e, 'description')}
-                    onKeyUp={handleKeyUp}
+                    value={description}
                     ref={descriptionRef}
                 />
 
@@ -95,7 +90,7 @@ export default function EditTask(props) {
             </Button>
                 <Button
                     variant="secondary"
-                    onClick={onClose}
+                    onClick={() => props.toggle(TOGGLE_EDIT_TASK)}
                 >
                     Cancel
             </Button>
@@ -103,10 +98,17 @@ export default function EditTask(props) {
         </Modal>
 
     );
-}
-
-EditTask.propTypes = {
-    data: PropTypes.object.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onSave: PropTypes.func.isRequired
 };
+
+const mapStateToProps = (state) => {
+    return {
+        data: state.editedTask
+    };
+};
+
+const mapDispatchToProps = {
+    toggle,
+    saveEditedTask
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(memo(EditTask));

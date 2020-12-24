@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { removeTasks, toggle } from '../../ReduxStore/actions';
+import { TOGGLE_CONFIRM } from '../../ReduxStore/types';
 
-export default function Confirm(props) {
+function Confirm(props) {
+
+    const requestBody = {
+        tasks: [...props.selectedTasks]
+    };
+
     return (
         <Modal
             show={props.show}
-            onHide={props.onClose}
+            onHide={() => props.toggle(TOGGLE_CONFIRM)}
             size='lg'
             centered>
             <Modal.Header closeButton>
@@ -15,21 +22,29 @@ export default function Confirm(props) {
             <Modal.Footer>
                 <Button
                     variant="danger"
-                    onClick={props.onSubmit}
+                    onClick={() => props.removeTasks(requestBody)}
                 >
                     Delete
           </Button>
-                <Button variant="secondary" onClick={props.onClose}>
-                    Close
+                <Button variant="secondary" onClick={() => props.toggle(TOGGLE_CONFIRM)}>
+                    Cancle
           </Button>
             </Modal.Footer>
         </Modal>
     );
-}
-
-Confirm.propTypes = {
-    show: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired,
-    count: PropTypes.number.isRequired,
 };
+
+const mapStateToProps = (state) => {
+    return {
+        count: state.selectedTasks.length,
+        selectedTasks: state.selectedTasks,
+        show: state.showConfirm
+    };
+};
+
+const mapDispatchToProps = {
+    removeTasks,
+    toggle
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(memo(Confirm));

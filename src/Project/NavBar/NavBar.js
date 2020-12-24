@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { memo, useRef } from 'react';
 import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
 import styles from './NavBarStyles.module.css';
 import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { searchTask } from '../../ReduxStore/actions';
 
 
-export default function NavBar() {
+function NavBar(props) {
+
+    const searchInputRef = useRef(null);
+
     return (
         <Navbar
             bg="light"
@@ -40,10 +45,26 @@ export default function NavBar() {
                         </NavLink>
                 </Nav>
                 <Form inline>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                    <Button variant="outline-primary">Search</Button>
+                    <FormControl
+                        type="text"
+                        placeholder="Search"
+                        className="mr-sm-2"
+                        ref={searchInputRef}
+                    />
+                    <Button
+                        variant="outline-primary"
+                        onClick={() => props.searchTask(searchInputRef.current.value)}
+                    >
+                        Search
+                        </Button>
                 </Form>
             </Navbar.Collapse>
         </Navbar>
-    )
-}
+    );
+};
+
+const mapDispatchToProps = {
+    searchTask
+};
+
+export default connect(null, mapDispatchToProps)(memo(NavBar));
