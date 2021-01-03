@@ -10,12 +10,12 @@ import EditTask from './Project/EditTask/EditTask';
 
 function App(props) {
 
-  if (props.error) {
-    toast.error(props.error.message);
+  if (props.errorMessage) {
+    toast.error(props.errorMessage.message);
   };
 
-  if (props.success) {
-    toast.success(props.success);
+  if (props.successMessage) {
+    toast.success(props.successMessage);
   };
 
   return (
@@ -48,11 +48,12 @@ function App(props) {
 };
 
 const mapStateToProps = (state) => {
+  const { errorMessage, successMessage, loader, editedTask } = state;
   return {
-    error: state.errorMessage,
-    success: state.successMessage,
-    loader: state.loader,
-    editedTask: state.editedTask
+    errorMessage,
+    successMessage,
+    loader,
+    editedTask
   };
 };
 

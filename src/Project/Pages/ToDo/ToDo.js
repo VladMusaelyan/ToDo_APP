@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import Task from '../../Task/Task';
 import AddTask from '../../AddTask/AddTask';
 import Confirm from '../../Confirm/Confirm';
@@ -9,14 +9,17 @@ import Spinner from '../../../assets/functions/Spinner';
 import { connect } from 'react-redux';
 import { getTasks, removeTask, editTask, toggle } from '../../../ReduxStore/actions';
 import { TOGGLE_CONFIRM, TOGGLE_ADD_TASK } from '../../../ReduxStore/types';
+import SortTasks from '../../SortTasks/SortTasks';
 
 
 function ToDo(props) {
 
+    const [sortModal, setSortModal] = useState(false);
+
     useEffect(() => {
-        props.getTasks();
+        props.getTasks(props.searchText, 'search');
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [props.searchText]);
 
     const task = props.tasks.map(element => {
         return (
@@ -50,6 +53,12 @@ function ToDo(props) {
                     >
                         <FontAwesomeIcon icon={faTrash} />
                     </Button>
+                    <Button
+                        variant="outline-info"
+                        onClick={() => setSortModal(!sortModal)}
+                    >
+                        Sort
+                    </Button>
                 </InputGroup.Append>
                 <Row>
                     {!!props.tasks ? task : <Spinner />}
@@ -62,16 +71,20 @@ function ToDo(props) {
                 props.addTaskSuccess &&
                 <AddTask />
             }
+            {
+                sortModal && <SortTasks onClose={setSortModal} />
+            }
         </div>
     );
 };
 
 const mapStateToProps = (state) => {
+    const { tasks, addTaskSuccess, selectedTasks, searchText } = state;
     return {
-        tasks: state.tasks,
-        success: state.successMessage,
-        addTaskSuccess: state.addTaskSuccess,
-        selectedTasks: state.selectedTasks
+        tasks,
+        addTaskSuccess,
+        selectedTasks,
+        searchText
     };
 };
 

@@ -1,55 +1,84 @@
 import React, { useState, memo } from 'react';
 import styles from './TaskStyles.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEdit, faCheckCircle, faHistory } from '@fortawesome/free-solid-svg-icons';
 import { Button, Card, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { removeTask, selectedTask, editTask } from '../../ReduxStore/actions';
-// import { TOGGLE_EDIT_TASK } from '../../ReduxStore/types';
+import { removeTask, selectedTask, editTask, changeStatus } from '../../ReduxStore/actions';
+import { useHistory } from 'react-router-dom';
 
 function Task(props) {
 
+    let from = '';
+
+    const history = useHistory();
+
     const [checked, setChecked] = useState(false);
 
+    const regex = /\/task\/.{24}/;
+
+    const pageLocation = () => {
+        return regex.test(history.location.pathname);
+    };
+
+    if (pageLocation()) {
+        from = 'singleTask';
+    };
+
     const handleCheck = (e) => {
-
         e.stopPropagation();
-
         setChecked(!checked);
-
         props.selectedTask(props.data._id);
     };
 
-    const element = props.data;
+    const redirect = () => {
+        history.push('/');
+    };
+
+    const handleChangeStatus = () => {
+        const status = props.data.status === 'active' ? 'done' : 'active';
+        const task = {
+            ...props.data,
+            date: new Date(props.data.date).toISOString().slice(0, 10),
+            status
+        };
+        props.changeStatus(task, from);
+    };
+
+    const task = props.data;
     const { disabled } = props;
     return (
         <Card className={checked && 'border border-danger'}>
-            <Link
-                to={`/task/${element._id}`}
-                className={styles.link}
-                onClick={(e) => { disabled && e.preventDefault() }}
-            >
-                <Card.Body>
-                    <Row>
-                        <Col xs={10} sm={10} md={10} lg={10} xl={10}>
-                            <Card.Title>
-                                {element.title.slice(0, 10)}
-                                {element.title.length > 10 && '...'}
-                            </Card.Title>
-                        </Col>
-                        <Col xs={2} sm={2} md={2} lg={2} xl={2}>
+            <Card.Header>
+                <Row>
+                    <Col xs={10} sm={10} md={10} lg={10} xl={10}>
+                        <Card.Title className='m-0'>
+                            {pageLocation() ? task.title : task.title.slice(0, 10)}
+                            {pageLocation() ? null : task.title.length > 10 && '...'}
+                        </Card.Title>
+                    </Col>
+                    {
+                        pageLocation() ? null : <Col xs={2} sm={2} md={2} lg={2} xl={2}>
                             <input
                                 type='checkbox'
                                 onClick={handleCheck}
                                 className={styles.checkbox}
                             />
                         </Col>
-                    </Row>
-                    <Card.Text>Description: {element.description}</Card.Text>
-                    <Card.Text>Date: {element.date.slice(0, 10)}</Card.Text>
-                    <Card.Text>Created at: {element.created_at.slice(0, 10)}</Card.Text>
+                    }
+                </Row>
+            </Card.Header>
+            <Link
+                to={`/task/${task._id}`}
+                className={pageLocation() ? styles.singleTaskLink : styles.link}
+                onClick={(e) => { (disabled || pageLocation()) && e.preventDefault() }}
+            >
+                <Card.Body>
+                    <Card.Text>Description: {pageLocation() ? task.description : task.description.length > 20 ? task.description.slice(0, 18) + '...' : task.description}</Card.Text>
+                    <Card.Text>Date: {task.date.slice(0, 10)}</Card.Text>
+                    <Card.Text>Created at: {task.created_at.slice(0, 10)}</Card.Text>
                 </Card.Body >
             </Link>
             <Card.Footer>
@@ -57,23 +86,31 @@ function Task(props) {
                     <Button
                         variant="warning"
                         disabled={disabled}
-                        className='ml-3'
-                        onClick={() => props.editTask(element)}
+                        onClick={() => props.editTask(task, from)}
                     >
                         <FontAwesomeIcon icon={faEdit} />
                     </Button>
                     <Button
                         variant="danger"
-                        onClick={() => props.removeTask(element._id)}
+                        className='mr-1'
+                        onClick={() => props.removeTask(task._id, from, redirect)}
                         disabled={disabled}
                     >
                         <FontAwesomeIcon icon={faTrash} />
+                    </Button>
+                    <Button
+                        variant={task.status === 'done' ? "success" : "warning"}
+                        className='mr-1'
+                        disabled={disabled}
+                        onClick={handleChangeStatus}
+                    >
+                        <FontAwesomeIcon icon={task.status === 'active' ? faHistory : faCheckCircle} />
                     </Button>
                 </div>
             </Card.Footer>
         </Card >
     );
-}
+};
 
 
 Task.propTypes = {
@@ -89,7 +126,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
     removeTask,
     selectedTask,
-    editTask
+    editTask,
+    changeStatus
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(memo(Task));

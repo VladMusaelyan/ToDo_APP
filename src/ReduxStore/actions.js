@@ -9,15 +9,23 @@ export function toggle(type) {
     return (dispatch) => dispatch({ type });
 };
 
-export function getTasks() {
+export function getTasks(arg, type) {
+    const searchText = type === 'search' ? arg : '';
+    let query = `?search=${searchText}`;
+    if (type === 'sort') {
+        query += `&&sort=${arg[0]}&&status=${arg[1]}`
+    };
     return (dispatch) => {
         dispatch({ type: types.LOADER, loader: true });
-        request('http://localhost:3001/task')
+        request(`http://localhost:3001/task${query}`)
             .then(res => dispatch({
                 type: types.GET_TASKS_SUCCESS,
                 tasks: res
             }))
             .catch(err => error(dispatch, err));
+        if (type === 'sort') {
+            dispatch({ type: types.SORT_TASKS, sortType: arg });
+        };
     };
 };
 
@@ -51,14 +59,17 @@ export function selectedTask(id) {
     };
 };
 
-export function removeTask(id) {
+export function removeTask(id, from = '', redirect) {
     return (dispatch) => {
         dispatch({ type: types.LOADER, loader: true });
         request(`http://localhost:3001/task/${id}`, 'DELETE')
-            .then(() => dispatch({
-                type: types.REMOVE_TASK_SUCCESS,
-                id
-            }))
+            .then(() => {
+                dispatch({
+                    type: types.REMOVE_TASK_SUCCESS,
+                    id
+                });
+                if (from === 'singleTask') redirect();
+            })
             .catch(err => error(dispatch, err));
     };
 };
@@ -90,20 +101,17 @@ export function saveEditedTask(editedTask) {
     };
 };
 
-export function searchTask(title) {
+export function searchTask(searchText) {
     return (dispatch) => {
-        if (!!title) {
-            dispatch({ type: types.SEARCH_TASK, title });
-        }
-        else {
-            dispatch({ type: types.LOADER, loader: true });
-            request('http://localhost:3001/task')
-                .then(res => dispatch({
-                    type: types.GET_TASKS_SUCCESS,
-                    tasks: res,
-                    loader: false
-                }))
-                .catch(err => error(dispatch, err));
-        };
+        dispatch({ type: types.SEARCH_TASK, text: searchText });
+    };
+};
+
+export function changeStatus(task, from) {
+    return (dispatch) => {
+        dispatch({ type: types.LOADER, loader: true });
+        request(`http://localhost:3001/task/${task._id}`, 'PUT', task)
+            .then(() => dispatch({ type: types.CHANGE_STATUS, task, from }))
+            .catch(err => error(dispatch, err));
     };
 };

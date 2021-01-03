@@ -24,4 +24,9 @@ export const TOGGLE_ADD_TASK = 'TOGGLE_ADDTASK';
 
 export const TOGGLE_EDIT_TASK = 'TOGGLE_EDIT_TASK';
 
-export const SEARCH_TASK = 'SEARCH_TASK'; 
+export const SEARCH_TASK = 'SEARCH_TASK';
+
+export const CHANGE_STATUS = 'CHANGE_STATUS';
+
+export const SORT_TASKS = 'SORT_TASKS';
+

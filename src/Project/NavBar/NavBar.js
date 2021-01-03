@@ -3,12 +3,26 @@ import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
 import styles from './NavBarStyles.module.css';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { searchTask } from '../../ReduxStore/actions';
+import { getTasks, searchTask } from '../../ReduxStore/actions';
+import { useHistory } from 'react-router-dom';
 
 
 function NavBar(props) {
 
     const searchInputRef = useRef(null);
+
+    const history = useHistory();
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            props.searchTask(searchInputRef.current.value)
+            if (history.location.pathname !== '/') {
+                history.push('/')
+            };
+            searchInputRef.current.value = '';
+        };
+    };
 
     return (
         <Navbar
@@ -24,6 +38,7 @@ function NavBar(props) {
                         exact
                         activeClassName={styles.activeLink}
                         className={`${styles.link} text-decoration-none mr-4 ml-4 mr-4 ml-4`}
+                        onClick={() => props.getTasks()}
                     >
                         Home
                         </NavLink>
@@ -50,10 +65,17 @@ function NavBar(props) {
                         placeholder="Search"
                         className="mr-sm-2"
                         ref={searchInputRef}
+                        onKeyPress={handleKeyPress}
                     />
                     <Button
                         variant="outline-primary"
-                        onClick={() => props.searchTask(searchInputRef.current.value)}
+                        onClick={() => {
+                            props.searchTask(searchInputRef.current.value)
+                            if (history.location.pathname !== '/') {
+                                history.push('/')
+                            };
+                            searchInputRef.current.value = '';
+                        }}
                     >
                         Search
                         </Button>
@@ -64,6 +86,7 @@ function NavBar(props) {
 };
 
 const mapDispatchToProps = {
+    getTasks,
     searchTask
 };
 

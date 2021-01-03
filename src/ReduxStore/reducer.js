@@ -10,7 +10,9 @@ const defaultState = {
     showConfirm: false,
     editedTask: null,
     singleTask: null,
-    editTaskFrom: null
+    editTaskFrom: null,
+    searchText: '',
+    sortType: ''
 };
 
 export default function reducer(state = defaultState, action) {
@@ -147,13 +149,39 @@ export default function reducer(state = defaultState, action) {
                 editTaskFrom: action.from
             };
 
-        case types.SEARCH_TASK: {
-            const tasks = state.tasks.filter(task => task.title.includes(action.title));
+        case types.SEARCH_TASK:
             return {
                 ...state,
-                tasks
+                searchText: action.text
+            };
+
+        case types.CHANGE_STATUS: {
+            if (action.from === 'singleTask') {
+                return {
+                    ...state,
+                    singleTask: action.task,
+                    successMessage: 'Status changed!',
+                    loader: false
+                };
+            }
+            else {
+                const tasks = [...state.tasks];
+                const findIndex = state.tasks.findIndex(task => task._id === action.task._id);
+                tasks[findIndex] = action.task;
+                return {
+                    ...state,
+                    tasks,
+                    successMessage: 'Status changed!',
+                    loader: false
+                };
             };
         }
+
+        case types.SORT_TASKS:
+            return {
+                ...state,
+                sortType: action.sortType
+            }
 
         default:
             return state;
