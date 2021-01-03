@@ -5,7 +5,7 @@ import Contact from '../Pages/Contact/Contact';
 import NotFound from '../Pages/NotFound/NotFound';
 import NavBar from '../NavBar/NavBar';
 import TaskPage from '../Pages/TaskPage/TaskPage';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router';
 
 export default function Routes() {
     return (

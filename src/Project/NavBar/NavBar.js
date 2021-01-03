@@ -1,10 +1,29 @@
-import React from 'react';
+import React, { memo, useRef } from 'react';
 import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
 import styles from './NavBarStyles.module.css';
 import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { getTasks, searchTask } from '../../ReduxStore/actions';
+import { useHistory } from 'react-router-dom';
 
 
-export default function NavBar() {
+function NavBar(props) {
+
+    const searchInputRef = useRef(null);
+
+    const history = useHistory();
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            props.searchTask(searchInputRef.current.value)
+            if (history.location.pathname !== '/') {
+                history.push('/')
+            };
+            searchInputRef.current.value = '';
+        };
+    };
+
     return (
         <Navbar
             bg="light"
@@ -19,6 +38,7 @@ export default function NavBar() {
                         exact
                         activeClassName={styles.activeLink}
                         className={`${styles.link} text-decoration-none mr-4 ml-4 mr-4 ml-4`}
+                        onClick={() => props.getTasks()}
                     >
                         Home
                         </NavLink>
@@ -40,10 +60,34 @@ export default function NavBar() {
                         </NavLink>
                 </Nav>
                 <Form inline>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                    <Button variant="outline-primary">Search</Button>
+                    <FormControl
+                        type="text"
+                        placeholder="Search"
+                        className="mr-sm-2"
+                        ref={searchInputRef}
+                        onKeyPress={handleKeyPress}
+                    />
+                    <Button
+                        variant="outline-primary"
+                        onClick={() => {
+                            props.searchTask(searchInputRef.current.value)
+                            if (history.location.pathname !== '/') {
+                                history.push('/')
+                            };
+                            searchInputRef.current.value = '';
+                        }}
+                    >
+                        Search
+                        </Button>
                 </Form>
             </Navbar.Collapse>
         </Navbar>
-    )
-}
+    );
+};
+
+const mapDispatchToProps = {
+    getTasks,
+    searchTask
+};
+
+export default connect(null, mapDispatchToProps)(memo(NavBar));

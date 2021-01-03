@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FormControl, Button, Modal } from 'react-bootstrap';
-import PropTypes from 'prop-types';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from './inputstyles.module.css';
+import { connect } from 'react-redux';
+import { addTask, toggle } from '../../ReduxStore/actions';
+import { TOGGLE_ADD_TASK } from '../../ReduxStore/types';
 
-export default function AddTask(props) {
+function AddTask(props) {
 
     const [date, setDate] = useState(new Date());
 
@@ -16,10 +18,6 @@ export default function AddTask(props) {
     useEffect(() => {
         titleRef.current.focus();
     }, []);
-
-    const handleKeyDown = (e) => {
-        e.key === 'Enter' & titleRef.current.value !== '' && addTask();
-    };
 
     const handleDateChange = (date) => {
         setDate(date);
@@ -34,14 +32,13 @@ export default function AddTask(props) {
             description: descriptionRef.current.value,
             date: date.toISOString().slice(0, 10)
         };
-        props.onAdd(task);
+        props.addTask(task);
     };
 
-    const { onClose } = props;
     return (
         <Modal
             show={true}
-            onHide={onClose}
+            onHide={() => props.toggle(TOGGLE_ADD_TASK)}
             size='lg'
             centered
         >
@@ -51,7 +48,6 @@ export default function AddTask(props) {
             <Modal.Body>
                 <FormControl
                     placeholder="Title"
-                    onKeyDown={handleKeyDown}
                     className='mb-3'
                     ref={titleRef}
                 />
@@ -76,16 +72,18 @@ export default function AddTask(props) {
                 </Button>
                 <Button
                     variant="secondary"
-                    onClick={onClose}
+                    onClick={() => props.toggle(TOGGLE_ADD_TASK)}
                 >
                     Cancel
                 </Button>
             </Modal.Footer>
         </Modal>
     );
-}
-
-AddTask.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    onAdd: PropTypes.func.isRequired
 };
+
+const mapDispatchToProps = {
+    addTask,
+    toggle
+};
+
+export default connect(null, mapDispatchToProps)(AddTask);

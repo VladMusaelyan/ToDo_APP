@@ -1,0 +1,32 @@
+export const GET_TASKS_SUCCESS = 'GET_TASKS_SUCCESS';
+
+export const GET_TASK_SUCCESS = 'GET_TASK_SUCCESS';
+
+export const ADD_TASK_SUCCESS = 'ADD_TASK_SUCCESS';
+
+export const REMOVE_TASK_SUCCESS = 'REMOVE_TASK_SUCCESS';
+
+export const REMOVE_TASKS_SUCCESS = 'REMOVE_TASKS_SUCCESS';
+
+export const EDIT_TASK = 'EDIT_TASK';
+
+export const SAVE_EDITED_TASK_SUCCESS = 'SAVE_EDITED_TASK_SUCCESS';
+
+export const ERROR = 'ERROR';
+
+export const LOADER = 'LOADER';
+
+export const SELECTED_TASK = 'SELECTED_TASK';
+
+export const TOGGLE_CONFIRM = 'TOGGLE_CONFIRM';
+
+export const TOGGLE_ADD_TASK = 'TOGGLE_ADDTASK';
+
+export const TOGGLE_EDIT_TASK = 'TOGGLE_EDIT_TASK';
+
+export const SEARCH_TASK = 'SEARCH_TASK';
+
+export const CHANGE_STATUS = 'CHANGE_STATUS';
+
+export const SORT_TASKS = 'SORT_TASKS';
+
