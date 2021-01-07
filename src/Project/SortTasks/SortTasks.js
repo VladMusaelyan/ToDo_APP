@@ -2,12 +2,18 @@ import React, { useState } from 'react';
 import { Modal, Button, Row, Col, InputGroup } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { getTasks } from '../../ReduxStore/actions';
+import DatePicker from "react-datepicker";
 
 function SortTasks(props) {
 
     const [sort, setSort] = useState(props.sortType[0]);
 
     const [filter, setFilter] = useState(props.sortType[1]);
+
+    const [date, setDate] = useState(!!props.sortType[2] ? props.sortType[2] : {
+        value: '',
+        selectedate: null
+    });
 
     const statusOptions = [
         {
@@ -47,6 +53,25 @@ function SortTasks(props) {
         }
     ];
 
+    const dateOptions = [
+        {
+            label: 'Create later than',
+            value: 'create_lte'
+        },
+        {
+            label: 'Crate earlier than',
+            value: 'create_gte'
+        },
+        {
+            label: 'Complete later than',
+            value: 'complete_lte'
+        },
+        {
+            label: 'Complete earlier than',
+            value: 'complete_gte'
+        },
+    ];
+
     return (
         <>
             <Modal size='lg' show={true} onHide={() => props.onClose(false)}>
@@ -74,11 +99,31 @@ function SortTasks(props) {
                             }
                         </Col>
                         <Col>
+                            <h4>Filter</h4>
+                            {
+                                dateOptions.map((item, index) => {
+                                    return (
+                                        <div key={index}>
+                                            <span className='d-block'>{item.label}</span>
+                                            <DatePicker
+                                                selected={item.value === date.value && date.selectedDate}
+                                                onChange={date => setDate({
+                                                    value: item.value,
+                                                    selectedDate: date
+                                                })}
+                                            />
+                                        </div>
+                                    );
+                                })
+                            }
+                        </Col>
+                        <Col>
                             <h4>Status</h4>
                             {
                                 statusOptions.map((item, index) => {
                                     return (
                                         <InputGroup.Prepend
+                                            className='mt-2'
                                             key={index}>
                                             <InputGroup.Checkbox
                                                 aria-label="Checkbox for following text input"
@@ -96,7 +141,7 @@ function SortTasks(props) {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" onClick={() => {
-                        props.getTasks([sort, filter], 'sort');
+                        props.getTasks([sort, filter, date], 'sort');
                         props.onClose(false);
                     }}>
                         Save

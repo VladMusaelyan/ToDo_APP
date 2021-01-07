@@ -13,7 +13,7 @@ export function getTasks(arg, type) {
     const searchText = type === 'search' ? arg : '';
     let query = `?search=${searchText}`;
     if (type === 'sort') {
-        query += `&&sort=${arg[0]}&&status=${arg[1]}`
+        query += `&&sort=${arg[0]}&&status=${arg[1]}&&${arg[2].value}=${arg[2].selectedDate}`
     };
     return (dispatch) => {
         dispatch({ type: types.LOADER, loader: true });
