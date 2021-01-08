@@ -115,3 +115,12 @@ export function changeStatus(task, from) {
             .catch(err => error(dispatch, err));
     };
 };
+
+export function changeSelectedStatus(task, from) {
+    return (dispatch) => {
+        dispatch({ type: types.LOADER, loader: true });
+        request(`http://localhost:3001/task/${task._id}`, 'PUT', task)
+            .then(() => dispatch({ type: types.CHANGE_SELCTED_STATUS, task, from }))
+            .catch(err => error(dispatch, err));
+    };
+};

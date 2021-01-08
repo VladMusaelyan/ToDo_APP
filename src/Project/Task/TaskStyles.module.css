@@ -13,6 +13,16 @@
     text-decoration: none !important;
 }
 
+.selected {
+    color: yellow;
+    cursor: pointer;
+}
+
+.nonSelected {
+    color: black;
+    cursor: pointer;
+}
+
 .singleTaskLink:hover {
     color: black;
 }
