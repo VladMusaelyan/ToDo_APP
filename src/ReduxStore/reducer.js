@@ -188,7 +188,6 @@ export default function reducer(state = defaultState, action) {
                 return {
                     ...state,
                     singleTask: action.task,
-                    successMessage: 'Task selcted!',
                     loader: false
                 };
             }
@@ -199,7 +198,6 @@ export default function reducer(state = defaultState, action) {
                 return {
                     ...state,
                     tasks,
-                    successMessage: 'Task selcted!',
                     loader: false
                 };
             };

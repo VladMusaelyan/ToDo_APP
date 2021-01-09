@@ -48,7 +48,8 @@ function Task(props) {
     };
 
     const handleChangeSelectedStatus = () => {
-        const selected = props.data.selected ? false : true;
+        if (props.disabled) return;
+        const selected = props.data.selected === 'true' ? 'false' : 'true';
         const task = {
             ...props.data,
             date: new Date(props.data.date).toISOString().slice(0, 10),
@@ -70,7 +71,7 @@ function Task(props) {
                         </Card.Title>
                     </Col>
                     <Col xs={3} sm={3} md={3} lg={3} xl={3}>
-                        <Row>
+                        <Row className={pageLocation() && 'flex-row-reverse'}>
                             {
                                 pageLocation() ? null : <Col xs={6} sm={6} md={6} lg={6} xl={6}>
                                     <input
@@ -83,7 +84,7 @@ function Task(props) {
                             <Col xs={6} sm={6} md={6} lg={6} xl={6}>
                                 <FontAwesomeIcon
                                     icon={faStar}
-                                    className={task.selected ? styles.selected : styles.nonSelected}
+                                    className={task.selected === 'true' ? styles.selected : styles.nonSelected + 'd-flex flex-row-reverse'}
                                     onClick={handleChangeSelectedStatus}
                                 />
                             </Col>
