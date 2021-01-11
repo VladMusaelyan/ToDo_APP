@@ -1,6 +1,8 @@
 import request from '../assets/functions/request';
 import * as types from './types';
 
+const URL = process.env.REACT_APP_API_URL;
+
 function error(dispatch, message) {
     dispatch({ type: types.ERROR, error: message });
 };
@@ -16,11 +18,10 @@ export function getTasks(arg, type) {
         if (!!arg.sort) query += `&&sort=${arg.sort}`;
         if (!!arg.status) query += `&&status=${arg.status}`;
         if (!!arg.date.value) query += `&&${arg.date.value}=${arg.date.selectedDate}`;
-        if (arg.selected === 'true') query += `&&selected=${arg.selected}`;
     };
     return (dispatch) => {
         dispatch({ type: types.LOADER, loader: true });
-        request(`http://localhost:3001/task${query}`)
+        request(`${URL}/task${query}`)
             .then(res => dispatch({
                 type: types.GET_TASKS_SUCCESS,
                 tasks: res
@@ -35,7 +36,7 @@ export function getTasks(arg, type) {
 export function getTask(id) {
     return (dispatch) => {
         dispatch({ type: types.LOADER, loader: true });
-        request(`http://localhost:3001/task/${id}`)
+        request(`${URL}/task/${id}`)
             .then((res) => {
                 dispatch({ type: types.GET_TASK_SUCCESS, task: res });
             })
@@ -46,7 +47,7 @@ export function getTask(id) {
 export function addTask(body) {
     return (dispatch) => {
         dispatch({ type: types.LOADER, loader: true });
-        request('http://localhost:3001/task', 'POST', body)
+        request(`${URL}/task`, 'POST', body)
             .then(res => dispatch({
                 type: types.ADD_TASK_SUCCESS,
                 task: res,
@@ -65,7 +66,7 @@ export function selectedTask(id) {
 export function removeTask(id, from = '', redirect) {
     return (dispatch) => {
         dispatch({ type: types.LOADER, loader: true });
-        request(`http://localhost:3001/task/${id}`, 'DELETE')
+        request(`${URL}/task/${id}`, 'DELETE')
             .then(() => {
                 dispatch({
                     type: types.REMOVE_TASK_SUCCESS,
@@ -80,7 +81,7 @@ export function removeTask(id, from = '', redirect) {
 export function removeTasks(body) {
     return (dispatch) => {
         dispatch({ type: types.LOADER, loader: true });
-        request(`http://localhost:3001/task`, 'PATCH', body)
+        request(`${URL}/task`, 'PATCH', body)
             .then((res) => dispatch({
                 type: types.REMOVE_TASKS_SUCCESS,
                 body
@@ -98,7 +99,7 @@ export function editTask(editedTask, from) {
 export function saveEditedTask(editedTask) {
     return (dispatch) => {
         dispatch({ type: types.LOADER, loader: true });
-        request(`http://localhost:3001/task/${editedTask._id}`, 'PUT', editedTask)
+        request(`${URL}/task/${editedTask._id}`, 'PUT', editedTask)
             .then(() => dispatch({ type: types.SAVE_EDITED_TASK_SUCCESS, editedTask }))
             .catch(err => error(dispatch, err));
     };
@@ -113,7 +114,7 @@ export function searchTask(searchText) {
 export function changeStatus(task, from) {
     return (dispatch) => {
         dispatch({ type: types.LOADER, loader: true });
-        request(`http://localhost:3001/task/${task._id}`, 'PUT', task)
+        request(`${URL}/task/${task._id}`, 'PUT', task)
             .then(() => dispatch({ type: types.CHANGE_STATUS, task, from }))
             .catch(err => error(dispatch, err));
     };
@@ -122,7 +123,7 @@ export function changeStatus(task, from) {
 export function changeSelectedStatus(task, from) {
     return (dispatch) => {
         dispatch({ type: types.LOADER, loader: true });
-        request(`http://localhost:3001/task/${task._id}`, 'PUT', task)
+        request(`${URL}/task/${task._id}`, 'PUT', task)
             .then(() => dispatch({ type: types.CHANGE_SELCTED_STATUS, task, from }))
             .catch(err => error(dispatch, err));
     };

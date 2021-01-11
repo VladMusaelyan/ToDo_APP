@@ -83,7 +83,7 @@ function EditTask(props) {
             </Modal.Body>
             <Modal.Footer>
                 <Button
-                    variant="success"
+                    variant="primary"
                     onClick={handleSave}
                 >
                     Save

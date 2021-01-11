@@ -15,7 +15,7 @@
 }
 
 .selected {
-    color: yellow;
+    color: #FFC107;
     cursor: pointer;
 }
 
