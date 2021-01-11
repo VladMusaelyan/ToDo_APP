@@ -1,5 +1,6 @@
 .checkbox {
     transform: scale(1.5);
+    cursor: pointer;
 }
 
 .link {
@@ -11,6 +12,16 @@
 .singleTaskLink {
     color: black;
     text-decoration: none !important;
+}
+
+.selected {
+    color: yellow;
+    cursor: pointer;
+}
+
+.nonSelected {
+    color: black;
+    cursor: pointer;
 }
 
 .singleTaskLink:hover {

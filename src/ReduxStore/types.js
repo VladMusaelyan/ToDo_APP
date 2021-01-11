@@ -30,3 +30,5 @@ export const CHANGE_STATUS = 'CHANGE_STATUS';
 
 export const SORT_TASKS = 'SORT_TASKS';
 
+export const CHANGE_SELCTED_STATUS = 'CHANGE_SELCTED_STATUS';
+

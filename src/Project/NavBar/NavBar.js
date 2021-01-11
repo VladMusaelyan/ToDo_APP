@@ -24,6 +24,21 @@ function NavBar(props) {
         };
     };
 
+    const pages = [
+        {
+            lable: 'Home',
+            to: '/'
+        },
+        {
+            lable: 'About',
+            to: '/about'
+        },
+        {
+            lable: 'Contact',
+            to: '/contact'
+        }
+    ];
+
     return (
         <Navbar
             bg="light"
@@ -32,34 +47,24 @@ function NavBar(props) {
         >
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="mr-auto">
-                    <NavLink
-                        to='/'
-                        exact
-                        activeClassName={styles.activeLink}
-                        className={`${styles.link} text-decoration-none mr-4 ml-4 mr-4 ml-4`}
-                        onClick={() => props.getTasks()}
-                    >
-                        Home
-                        </NavLink>
-                    <NavLink
-                        to='/about'
-                        exact
-                        activeClassName={styles.activeLink}
-                        className={`${styles.link} text-decoration-none mr-4 ml-4 mr-4 ml-4`}
-                    >
-                        About
-                        </NavLink>
-                    <NavLink
-                        to='/contact'
-                        exact
-                        activeClassName={styles.activeLink}
-                        className={`${styles.link} text-decoration-none mr-4 ml-4 mr-4 ml-4`}
-                    >
-                        Contact
-                        </NavLink>
-                </Nav>
-                <Form inline>
+                {
+                    pages.map((item, index) => {
+                        return (
+                            <Nav className="mr-2" key={index}>
+                                <NavLink
+                                    to={item.to}
+                                    exact
+                                    activeClassName={styles.activeLink}
+                                    className={`${styles.link} text-decoration-none mr-4 ml-4`}
+                                    onClick={() => props.getTasks()}
+                                >
+                                    {item.lable}
+                                </NavLink>
+                            </ Nav>
+                        )
+                    })
+                }
+                <Form inline className='ml-auto'>
                     <FormControl
                         type="text"
                         placeholder="Search"

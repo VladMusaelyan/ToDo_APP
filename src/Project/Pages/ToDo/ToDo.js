@@ -30,6 +30,7 @@ function ToDo(props) {
             </Col>
         );
     });
+
     return (
         <div>
             <Container>
@@ -74,7 +75,7 @@ function ToDo(props) {
             {
                 sortModal && <SortTasks onClose={setSortModal} />
             }
-        </div>
+        </div >
     );
 };
 

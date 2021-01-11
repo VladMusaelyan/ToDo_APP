@@ -1,12 +1,12 @@
 import React, { useState, memo } from 'react';
 import styles from './TaskStyles.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEdit, faCheckCircle, faHistory } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEdit, faCheckCircle, faHistory, faStar } from '@fortawesome/free-solid-svg-icons';
 import { Button, Card, Row, Col } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { removeTask, selectedTask, editTask, changeStatus } from '../../ReduxStore/actions';
+import { removeTask, selectedTask, editTask, changeStatus, changeSelectedStatus } from '../../ReduxStore/actions';
 import { useHistory } from 'react-router-dom';
 
 function Task(props) {
@@ -47,27 +47,49 @@ function Task(props) {
         props.changeStatus(task, from);
     };
 
+    const handleChangeSelectedStatus = () => {
+        if (props.disabled) return;
+        const selected = props.data.selected === 'true' ? 'false' : 'true';
+        const task = {
+            ...props.data,
+            date: new Date(props.data.date).toISOString().slice(0, 10),
+            selected
+        };
+        props.changeSelectedStatus(task, from);
+    };
+
     const task = props.data;
     const { disabled } = props;
     return (
         <Card className={checked && 'border border-danger'}>
             <Card.Header>
                 <Row>
-                    <Col xs={10} sm={10} md={10} lg={10} xl={10}>
+                    <Col xs={9} sm={9} md={9} lg={9} xl={9}>
                         <Card.Title className='m-0'>
                             {pageLocation() ? task.title : task.title.slice(0, 10)}
                             {pageLocation() ? null : task.title.length > 10 && '...'}
                         </Card.Title>
                     </Col>
-                    {
-                        pageLocation() ? null : <Col xs={2} sm={2} md={2} lg={2} xl={2}>
-                            <input
-                                type='checkbox'
-                                onClick={handleCheck}
-                                className={styles.checkbox}
-                            />
-                        </Col>
-                    }
+                    <Col xs={3} sm={3} md={3} lg={3} xl={3}>
+                        <Row className={pageLocation() && 'flex-row-reverse'}>
+                            {
+                                pageLocation() ? null : <Col xs={6} sm={6} md={6} lg={6} xl={6}>
+                                    <input
+                                        type='checkbox'
+                                        onClick={handleCheck}
+                                        className={styles.checkbox}
+                                    />
+                                </Col>
+                            }
+                            <Col xs={6} sm={6} md={6} lg={6} xl={6}>
+                                <FontAwesomeIcon
+                                    icon={faStar}
+                                    className={task.selected === 'true' ? styles.selected : styles.nonSelected + 'd-flex flex-row-reverse'}
+                                    onClick={handleChangeSelectedStatus}
+                                />
+                            </Col>
+                        </Row>
+                    </Col>
                 </Row>
             </Card.Header>
             <Link
@@ -127,7 +149,8 @@ const mapDispatchToProps = {
     removeTask,
     selectedTask,
     editTask,
-    changeStatus
+    changeStatus,
+    changeSelectedStatus
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(memo(Task));

@@ -183,6 +183,25 @@ export default function reducer(state = defaultState, action) {
                 sortType: action.sortType
             }
 
+        case types.CHANGE_SELCTED_STATUS:
+            if (action.from === 'singleTask') {
+                return {
+                    ...state,
+                    singleTask: action.task,
+                    loader: false
+                };
+            }
+            else {
+                const tasks = [...state.tasks];
+                const findIndex = state.tasks.findIndex(task => task._id === action.task._id);
+                tasks[findIndex] = action.task;
+                return {
+                    ...state,
+                    tasks,
+                    loader: false
+                };
+            };
+
         default:
             return state;
     }
