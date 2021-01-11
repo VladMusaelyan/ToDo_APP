@@ -3,7 +3,7 @@ import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
 import styles from './NavBarStyles.module.css';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getTasks, searchTask } from '../../ReduxStore/actions';
+import { getTasks } from '../../ReduxStore/actions';
 import { useHistory } from 'react-router-dom';
 
 
@@ -16,7 +16,7 @@ function NavBar(props) {
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
-            props.searchTask(searchInputRef.current.value)
+            props.getTasks(searchInputRef.current.value, 'search');
             if (history.location.pathname !== '/') {
                 history.push('/')
             };
@@ -56,7 +56,9 @@ function NavBar(props) {
                                     exact
                                     activeClassName={styles.activeLink}
                                     className={`${styles.link} text-decoration-none mr-4 ml-4`}
-                                    onClick={() => props.getTasks()}
+                                    onClick={() => {
+                                        if (item.lable === 'Home' && history.location.pathname === '/') props.getTasks()
+                                    }}
                                 >
                                     {item.lable}
                                 </NavLink>
@@ -75,7 +77,7 @@ function NavBar(props) {
                     <Button
                         variant="outline-primary"
                         onClick={() => {
-                            props.searchTask(searchInputRef.current.value)
+                            props.getTasks(searchInputRef.current.value, 'search')
                             if (history.location.pathname !== '/') {
                                 history.push('/')
                             };
@@ -91,8 +93,7 @@ function NavBar(props) {
 };
 
 const mapDispatchToProps = {
-    getTasks,
-    searchTask
+    getTasks
 };
 
 export default connect(null, mapDispatchToProps)(memo(NavBar));
