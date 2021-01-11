@@ -11,7 +11,6 @@ const defaultState = {
     editedTask: null,
     singleTask: null,
     editTaskFrom: null,
-    searchText: '',
     sortType: ''
 };
 
@@ -147,12 +146,6 @@ export default function reducer(state = defaultState, action) {
                 editedTask: action.task,
                 successMessage: null,
                 editTaskFrom: action.from
-            };
-
-        case types.SEARCH_TASK:
-            return {
-                ...state,
-                searchText: action.text
             };
 
         case types.CHANGE_STATUS: {

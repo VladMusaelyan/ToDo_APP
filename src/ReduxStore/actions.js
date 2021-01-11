@@ -12,8 +12,10 @@ export function toggle(type) {
 };
 
 export function getTasks(arg, type) {
+    let query = '';
     const searchText = type === 'search' ? arg : '';
-    let query = `?search=${searchText}`;
+    if (!!arg) query = '?';
+    if (!!searchText) query += `search=${searchText}`
     if (type === 'sort') {
         if (!!arg.sort) query += `&&sort=${arg.sort}`;
         if (!!arg.status) query += `&&status=${arg.status}`;
@@ -102,12 +104,6 @@ export function saveEditedTask(editedTask) {
         request(`${URL}/task/${editedTask._id}`, 'PUT', editedTask)
             .then(() => dispatch({ type: types.SAVE_EDITED_TASK_SUCCESS, editedTask }))
             .catch(err => error(dispatch, err));
-    };
-};
-
-export function searchTask(searchText) {
-    return (dispatch) => {
-        dispatch({ type: types.SEARCH_TASK, text: searchText });
     };
 };
 
