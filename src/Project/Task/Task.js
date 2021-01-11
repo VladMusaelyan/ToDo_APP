@@ -84,7 +84,7 @@ function Task(props) {
                             <Col xs={6} sm={6} md={6} lg={6} xl={6}>
                                 <FontAwesomeIcon
                                     icon={faStar}
-                                    className={task.selected === 'true' ? styles.selected : styles.nonSelected + 'd-flex flex-row-reverse'}
+                                    className={task.selected === 'true' ? styles.selected : styles.nonSelected}
                                     onClick={handleChangeSelectedStatus}
                                 />
                             </Col>
@@ -98,9 +98,10 @@ function Task(props) {
                 onClick={(e) => { (disabled || pageLocation()) && e.preventDefault() }}
             >
                 <Card.Body>
-                    <Card.Text>Description: {pageLocation() ? task.description : task.description.length > 20 ? task.description.slice(0, 18) + '...' : task.description}</Card.Text>
-                    <Card.Text>Date: {task.date.slice(0, 10)}</Card.Text>
-                    <Card.Text>Created at: {task.created_at.slice(0, 10)}</Card.Text>
+                    <Card.Text> <span style={{ fontWeight: 'bold', opacity: '.7' }}>Description:</span> {pageLocation() ? task.description : task.description.length > 20 ? task.description.slice(0, 18) + '...' : task.description}</Card.Text>
+                    <Card.Text><span style={{ fontWeight: 'bold', opacity: '.7' }}>Status:</span> <span style={{ fontWeight: 'bolder', color: task.status === 'active' ? '#007BFF' : '#28A745' }}>{task.status}</span></Card.Text>
+                    <Card.Text><span style={{ fontWeight: 'bold', opacity: '.7' }}>Date:</span> {task.date.slice(0, 10)}</Card.Text>
+                    <Card.Text><span style={{ fontWeight: 'bold', opacity: '.7' }}>Created at:</span> {task.created_at.slice(0, 10)}</Card.Text>
                 </Card.Body >
             </Link>
             <Card.Footer>
@@ -121,7 +122,7 @@ function Task(props) {
                         <FontAwesomeIcon icon={faTrash} />
                     </Button>
                     <Button
-                        variant={task.status === 'done' ? "success" : "warning"}
+                        variant={task.status === 'done' ? "success" : "primary"}
                         className='mr-1'
                         disabled={disabled}
                         onClick={handleChangeStatus}

@@ -15,8 +15,6 @@ function SortTasks(props) {
         selectedate: null
     });
 
-    const [selected, setSelected] = useState(false);
-
     const statusOptions = [
         {
             label: 'Active',
@@ -25,13 +23,6 @@ function SortTasks(props) {
         {
             label: 'Done',
             value: 'done'
-        }
-    ];
-
-    const selectedOptions = [
-        {
-            lable: 'Selected tasks',
-            value: 'true'
         }
     ];
 
@@ -145,28 +136,12 @@ function SortTasks(props) {
                                     );
                                 })
                             }
-                            <h4 className='mt-4'>Selected</h4>
-                            {
-                                selectedOptions.map((item, index) => {
-                                    return (
-                                        <InputGroup.Prepend
-                                            key={index}
-                                            className='mt-2'>
-                                            <InputGroup.Checkbox
-                                                aria-label="Checkbox for following text input"
-                                                onChange={() => setSelected(!selected)}
-                                            />
-                                            {item.lable}
-                                        </InputGroup.Prepend>
-                                    );
-                                })
-                            }
                         </Col>
                     </Row>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" onClick={() => {
-                        props.getTasks({ sort, status, date, selected: selected.toString() }, 'sort');
+                        props.getTasks({ sort, status, date, }, 'sort');
                         props.onClose(false);
                     }}>
                         Save
