@@ -11,7 +11,14 @@ const defaultState = {
     editedTask: null,
     singleTask: null,
     editTaskFrom: null,
-    sortType: ''
+    sortType: {
+        sort: '',
+        filter: '',
+        date: {
+            value: '',
+            selectedate: null
+        }
+    }
 };
 
 export default function reducer(state = defaultState, action) {
