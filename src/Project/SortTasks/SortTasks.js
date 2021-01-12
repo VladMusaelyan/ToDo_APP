@@ -6,14 +6,11 @@ import DatePicker from "react-datepicker";
 
 function SortTasks(props) {
 
-    const [sort, setSort] = useState(!!props.sortType.sort ? props.sortType.sort : '');
+    const [sort, setSort] = useState(props.sortType.sort);
 
-    const [status, setStatus] = useState(!!props.sortType.status ? props.sortType.status : '');
+    const [status, setStatus] = useState(props.sortType.status);
 
-    const [date, setDate] = useState(!!props.sortType.date ? props.sortType.date : {
-        value: '',
-        selectedate: null
-    });
+    const [date, setDate] = useState(props.sortType.date);
 
     const statusOptions = [
         {
