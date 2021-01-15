@@ -18,7 +18,9 @@ const defaultState = {
             value: '',
             selectedate: null
         }
-    }
+    },
+    contactMessage: '',
+    searchText: ''
 };
 
 export default function reducer(state = defaultState, action) {
@@ -37,10 +39,11 @@ export default function reducer(state = defaultState, action) {
                 loader: action.loader,
                 errorMessage: null,
                 successMessage: null,
+                contactMessage: '',
                 addTaskSuccess: false,
                 showConfirm: false,
                 editedTask: null,
-                singleTask: null,
+                singleTask: null
             };
 
         case types.TOGGLE_ADD_TASK:
@@ -156,11 +159,17 @@ export default function reducer(state = defaultState, action) {
             };
 
         case types.CHANGE_STATUS: {
+            let message = '';
+            if (action.task.status === 'active') {
+                message = 'Your task active!';
+            } else {
+                message = 'Your task has been done!';
+            }
             if (action.from === 'singleTask') {
                 return {
                     ...state,
                     singleTask: action.task,
-                    successMessage: 'Status changed!',
+                    successMessage: message,
                     loader: false
                 };
             }
@@ -171,7 +180,7 @@ export default function reducer(state = defaultState, action) {
                 return {
                     ...state,
                     tasks,
-                    successMessage: 'Status changed!',
+                    successMessage: message,
                     loader: false
                 };
             };
@@ -200,6 +209,19 @@ export default function reducer(state = defaultState, action) {
                     tasks,
                     loader: false
                 };
+            };
+
+        case types.CONTACT_MESSAGE:
+            return {
+                ...state,
+                contactMessage: 'Thank You for contact with us, we\'ll reply you as soon as possible',
+                loader: false
+            };
+
+        case types.SEARCH_TASK:
+            return {
+                ...state,
+                searchText: action.text
             };
 
         default:

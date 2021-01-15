@@ -23,9 +23,9 @@ function ToDo(props) {
   if (selected) tasks = tasks.filter(item => item.selected === 'true');
 
   useEffect(() => {
-    props.getTasks();
+    props.getTasks(props.searchText, 'search');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [props.searchText]);
 
   const task = tasks.map((element) => {
     return (
@@ -94,11 +94,12 @@ function ToDo(props) {
 }
 
 const mapStateToProps = (state) => {
-  const { tasks, addTaskSuccess, selectedTasks } = state;
+  const { tasks, addTaskSuccess, selectedTasks, searchText } = state;
   return {
     tasks,
     addTaskSuccess,
-    selectedTasks
+    selectedTasks,
+    searchText
   };
 };
 

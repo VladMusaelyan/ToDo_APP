@@ -5,6 +5,7 @@ import Contact from '../Pages/Contact/Contact';
 import NotFound from '../Pages/NotFound/NotFound';
 import NavBar from '../NavBar/NavBar';
 import TaskPage from '../Pages/TaskPage/TaskPage';
+import Footer from '../Footer/Footer';
 import { Route, Switch, Redirect } from 'react-router';
 
 export default function Routes() {
@@ -20,6 +21,8 @@ export default function Routes() {
                 <Route path='/404' exact component={NotFound} />
                 <Redirect to={'/404'} />
             </Switch>
+
+            <Footer />
         </>
     );
-}
+};

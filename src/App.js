@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/heading-has-content */
 import React from 'react';
-import './App.css';
 import Routes from './Project/Routes/Routes';
 import { connect } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
@@ -18,8 +17,12 @@ function App(props) {
     toast.success(props.successMessage);
   };
 
+  if (props.contactMessage) {
+    toast.info(props.contactMessage);
+  };
+
   return (
-    <>
+    <div>
       <Routes />
 
       <ToastContainer
@@ -43,15 +46,16 @@ function App(props) {
         !!props.editedTask &&
         <EditTask />
       }
-    </>
+    </div>
   );
 };
 
 const mapStateToProps = (state) => {
-  const { errorMessage, successMessage, loader, editedTask } = state;
+  const { errorMessage, successMessage, loader, editedTask, contactMessage } = state;
   return {
     errorMessage,
     successMessage,
+    contactMessage,
     loader,
     editedTask
   };

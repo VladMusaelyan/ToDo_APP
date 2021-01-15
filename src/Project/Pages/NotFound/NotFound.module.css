@@ -1,6 +1,23 @@
-.notFound{
-    background-image: url('../../../assets/images/404-error.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 100vh;
+.title {
+    margin-top: 50px;
+    line-height: 60px;
+    padding-left: 70px;
+    position: relative;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.title:before {
+    content: "";
+    position: absolute;
+    background-color: #007BFF;
+    width: 25px;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.text {
+    margin: 150px 0px 0px 95px;
+    font-size: 24px;
 }

@@ -30,3 +30,6 @@ export const SORT_TASKS = 'SORT_TASKS';
 
 export const CHANGE_SELCTED_STATUS = 'CHANGE_SELCTED_STATUS';
 
+export const CONTACT_MESSAGE = 'CONTACT_MESSAGE';
+
+export const SEARCH_TASK = 'SEARCH_TASK';
