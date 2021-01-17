@@ -214,7 +214,7 @@ export default function reducer(state = defaultState, action) {
         case types.CONTACT_MESSAGE:
             return {
                 ...state,
-                contactMessage: 'Thank You for contact with us, we\'ll reply you as soon as possible',
+                contactMessage: 'Thank You for contact us, we\'ll reply you as soon as possible',
                 loader: false
             };
 

@@ -57,7 +57,6 @@ function AddTask(props) {
                     className={styles.textArea}
                     placeholder="Description"
                     ref={descriptionRef}
-                    onKeyPress={(e) => e.key === 'Enter' && addTask()}
                 />
                 <DatePicker
                     selected={date}

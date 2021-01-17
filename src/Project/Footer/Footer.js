@@ -21,6 +21,15 @@ export default function () {
             >
                 <FontAwesomeIcon icon={faLinkedin} color='#007BFF' />
             </a>
+            |
+            <a
+                href="https://www.facebook.com/profile.php?id=100046693954570"
+                rel="noopener noreferrer"
+                target='_blank'
+                className='text-decoration-none'
+            >
+                &#xa9; VM
+                 </a>
         </div>
     );
 };

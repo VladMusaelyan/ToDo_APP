@@ -74,7 +74,6 @@ function EditTask(props) {
                     onChange={(e) => handleChange(e, 'description')}
                     value={description}
                     ref={descriptionRef}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSave()}
                 />
 
                 <DatePicker
