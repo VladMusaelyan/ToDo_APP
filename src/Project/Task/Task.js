@@ -122,12 +122,12 @@ function Task(props) {
                         <FontAwesomeIcon icon={faTrash} />
                     </Button>
                     <Button
-                        variant={task.status === 'done' ? "success" : "primary"}
+                        variant={task.status === 'active' ? "success" : "primary"}
                         className='mr-1'
                         disabled={disabled}
                         onClick={handleChangeStatus}
                     >
-                        <FontAwesomeIcon icon={task.status === 'active' ? faHistory : faCheckCircle} />
+                        <FontAwesomeIcon icon={task.status === 'active' ? faCheckCircle : faHistory} />
                     </Button>
                 </div>
             </Card.Footer>

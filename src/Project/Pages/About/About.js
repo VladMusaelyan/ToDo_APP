@@ -63,11 +63,11 @@ export default function About() {
                     if it is yellow, the task is already completed.`
                 },
                 {
-                    title: 'Sort and filter tasks',
-                    content: `On the home page, next to the "Add" and "Trash" buttons appears "Sort" button, click on it, and a modal
-                    window will open. Here you can select sorting by 'a-z'(in alphabetical order), 'z-a'(in reverse order of the alphabet),
-                    creation date oldest, creation date newest, completion date oldest or by completion date newest and filters by date(by
-                    creation or execution) or by status. Choose what you need and save them using the "Save". `
+                    title: 'Sorting and filtering tasks',
+                    content: `On the home page next to the buttons "Add" and "Trash" appears the button "Sort", you click on it, and a
+                    modal window opens. Here you can choose to sort by "a-z" (in alphabetical order), "z-a" (in reverse alphabetical order),
+                    date the oldest was created, date the newest was created, date the oldest was completed or by date the newest was completed
+                    and filters by date (by creation or execution) or by status. Select what you want and save them using "Save". `
                 }
             ]
         }
