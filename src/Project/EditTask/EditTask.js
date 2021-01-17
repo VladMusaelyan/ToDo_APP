@@ -13,13 +13,13 @@ function EditTask(props) {
         date: props.date ? new Date(props.date) : new Date()
     });
 
-    const titleRef = useRef(state.title);
+    const titleRef = useRef(null);
 
-    const descriptionRef = useRef(props.description);
+    const descriptionRef = useRef(null);
 
     useEffect(() => {
         titleRef.current.focus();
-    }, [])
+    }, []);
 
     const handleChange = (e, type) => {
         setState({
@@ -32,7 +32,7 @@ function EditTask(props) {
         const { title, date } = state;
         if (!title) {
             return;
-        }
+        };
         const editedTask = {
             ...state,
             date: date.toISOString().slice(0, 10)
@@ -65,6 +65,7 @@ function EditTask(props) {
                     value={title}
                     className='mb-1'
                     ref={titleRef}
+                    onKeyPress={(e) => e.key === 'Enter' && descriptionRef.current.focus()}
                 />
                 <textarea
                     rows="5"

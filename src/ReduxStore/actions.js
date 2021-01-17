@@ -124,3 +124,18 @@ export function changeSelectedStatus(task, from) {
             .catch(err => error(dispatch, err));
     };
 };
+
+export function contactSubmit(body) {
+    return (dispatch) => {
+        dispatch({ type: types.LOADER, loader: true });
+        request(`${URL}/form`, 'POST', body)
+            .then(res => dispatch({ type: types.CONTACT_MESSAGE }))
+            .catch(err => error(dispatch, err))
+    };
+};
+
+export function searchTask(searchText) {
+    return (dispatch) => {
+        dispatch({ type: types.SEARCH_TASK, text: searchText });
+    };
+};

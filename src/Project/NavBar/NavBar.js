@@ -3,7 +3,7 @@ import { Nav, Navbar, Form, FormControl, Button } from 'react-bootstrap';
 import styles from './NavBarStyles.module.css';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getTasks } from '../../ReduxStore/actions';
+import { searchTask, getTasks } from '../../ReduxStore/actions';
 import { useHistory } from 'react-router-dom';
 
 
@@ -16,9 +16,9 @@ function NavBar(props) {
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
-            props.getTasks(searchInputRef.current.value, 'search');
+            props.searchTask(searchInputRef.current.value, 'search');
             if (history.location.pathname !== '/') {
-                history.push('/')
+                history.push('/');
             };
             searchInputRef.current.value = '';
         };
@@ -77,7 +77,7 @@ function NavBar(props) {
                     <Button
                         variant="outline-primary"
                         onClick={() => {
-                            props.getTasks(searchInputRef.current.value, 'search')
+                            props.searchTask(searchInputRef.current.value, 'search')
                             if (history.location.pathname !== '/') {
                                 history.push('/')
                             };
@@ -93,6 +93,7 @@ function NavBar(props) {
 };
 
 const mapDispatchToProps = {
+    searchTask,
     getTasks
 };
 

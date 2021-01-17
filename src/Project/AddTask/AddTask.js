@@ -26,7 +26,7 @@ function AddTask(props) {
     const addTask = () => {
         if (!titleRef.current.value) {
             return;
-        }
+        };
         const task = {
             title: titleRef.current.value,
             description: descriptionRef.current.value,
@@ -50,6 +50,7 @@ function AddTask(props) {
                     placeholder="Title"
                     className='mb-3'
                     ref={titleRef}
+                    onKeyPress={(e) => e.key === 'Enter' && descriptionRef.current.focus()}
                 />
                 <textarea
                     rows="5"
