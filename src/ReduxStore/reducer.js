@@ -19,8 +19,7 @@ const defaultState = {
             selectedate: null
         }
     },
-    contactMessage: '',
-    searchText: ''
+    contactMessage: ''
 };
 
 export default function reducer(state = defaultState, action) {
@@ -216,12 +215,6 @@ export default function reducer(state = defaultState, action) {
                 ...state,
                 contactMessage: 'Thank You for contact us, we\'ll reply you as soon as possible',
                 loader: false
-            };
-
-        case types.SEARCH_TASK:
-            return {
-                ...state,
-                searchText: action.text
             };
 
         default:

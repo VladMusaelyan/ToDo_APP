@@ -133,9 +133,3 @@ export function contactSubmit(body) {
             .catch(err => error(dispatch, err))
     };
 };
-
-export function searchTask(searchText) {
-    return (dispatch) => {
-        dispatch({ type: types.SEARCH_TASK, text: searchText });
-    };
-};
