@@ -85,9 +85,8 @@ function SortTasks(props) {
                                             key={index}>
                                             <InputGroup.Checkbox
                                                 aria-label="Checkbox for following text input"
-                                                disabled={item.value !== sort && !!sort}
                                                 checked={sort !== '' && item.value === sort}
-                                                onChange={() => !!sort ? setSort('') : setSort(item.value)}
+                                                onChange={() => setSort(item.value)}
                                             />
                                             {item.label}
                                         </InputGroup.Prepend>
@@ -124,9 +123,8 @@ function SortTasks(props) {
                                             key={index}>
                                             <InputGroup.Checkbox
                                                 aria-label="Checkbox for following text input"
-                                                disabled={!!status && item.value !== status ? true : false}
                                                 checked={status !== '' && item.value === status}
-                                                onChange={() => !!status ? setStatus('') : setStatus(item.value)}
+                                                onChange={() => setStatus(item.value)}
                                             />
                                             {item.label}
                                         </InputGroup.Prepend>
