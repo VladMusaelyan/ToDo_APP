@@ -1,8 +1,8 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
-import { getTasks, removeTask, editTask, toggle, } from "../../../ReduxStore/actions";
+import { getTasks, removeTask, editTask, toggle } from "../../../ReduxStore/actions";
 import { TOGGLE_CONFIRM, TOGGLE_ADD_TASK } from "../../../ReduxStore/types";
-import { Container, Row, Col, Button, InputGroup } from "react-bootstrap";
+import { Container, Row, Col, Button, InputGroup, Form, FormControl } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faStar } from "@fortawesome/free-solid-svg-icons";
 import Switch from 'react-switch';
@@ -16,6 +16,8 @@ function ToDo(props) {
 
   let tasks = [...props.tasks];
 
+  const searchInputRef = useRef(null);
+
   const [sortModal, setSortModal] = useState(false);
 
   const [selected, setSelcted] = useState(false);
@@ -23,9 +25,17 @@ function ToDo(props) {
   if (selected) tasks = tasks.filter(item => item.selected === 'true');
 
   useEffect(() => {
-    props.getTasks(props.searchText, 'search');
+    props.getTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.searchText]);
+  }, []);
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      props.getTasks(searchInputRef.current.value, 'search');
+      searchInputRef.current.value = '';
+    };
+  };
 
   const task = tasks.map((element) => {
     return (
@@ -72,8 +82,18 @@ function ToDo(props) {
           >
             Sort
           </Button>
+
+          <Form inline className='ml-auto'>
+            <FormControl
+              type="text"
+              placeholder='Search...'
+              className="mr-sm-2 rounded-pill text-end"
+              ref={searchInputRef}
+              onKeyPress={handleKeyPress}
+            />
+          </Form>
         </InputGroup.Append>
-        <div className='float-right'>
+        <div className='float-right mt-2'>
           <Switch
             onChange={() => setSelcted(!selected)}
             checked={selected}
@@ -94,12 +114,11 @@ function ToDo(props) {
 }
 
 const mapStateToProps = (state) => {
-  const { tasks, addTaskSuccess, selectedTasks, searchText } = state;
+  const { tasks, addTaskSuccess, selectedTasks } = state;
   return {
     tasks,
     addTaskSuccess,
-    selectedTasks,
-    searchText
+    selectedTasks
   };
 };
 
@@ -107,7 +126,7 @@ const mapDispatchToProps = {
   getTasks,
   removeTask,
   editTask,
-  toggle,
+  toggle
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(memo(ToDo));
