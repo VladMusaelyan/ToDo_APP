@@ -12,21 +12,44 @@ function Contact(props) {
 
     const messageRef = useRef(null);
 
-    if (!!props.contactMessage) {
-        nameRef.current.value = '';
-        emailRef.current.value = '';
-        messageRef.current.value = '';
-    };
-
     const handleSubmit = () => {
 
-        const body = {
-            name: nameRef.current.value,
-            email: emailRef.current.value,
-            message: messageRef.current.value
+        const emailReg = /^[\w]+@([\w-]+\.)+[\w-]{2,4}$/g;
+
+        const emailRegBool = emailReg.test(emailRef.current.value);
+
+        if (nameRef.current.value === '') {
+            nameRef.current.style.borderColor = 'red';
+        } else {
+            nameRef.current.style.borderColor = '#ced4da';
         };
 
-        props.contactSubmit(body);
+        if (emailRegBool) {
+            emailRef.current.style.borderColor = '#ced4da';
+        } else {
+            emailRef.current.style.borderColor = 'red';
+        };
+
+        if (messageRef.current.value === '') {
+            messageRef.current.style.borderColor = 'red';
+        } else {
+            messageRef.current.style.borderColor = '#ced4da';
+        };
+
+        if (!!nameRef.current.value && emailRegBool && !!messageRef.current.value) {
+
+            const body = {
+                name: nameRef.current.value,
+                email: emailRef.current.value,
+                message: messageRef.current.value
+            };
+
+            props.contactSubmit(body);
+
+            nameRef.current.value = '';
+            emailRef.current.value = '';
+            messageRef.current.value = '';
+        };
     };
 
     return (

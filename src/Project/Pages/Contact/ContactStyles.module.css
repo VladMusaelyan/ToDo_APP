@@ -1,11 +1,11 @@
-.componentBody{
+.componentBody {
     font-family: 'Century Gothic';
     display: flex;
     justify-content: center;
     margin-top: 80px;
 }
 
-.fontStyle{
+.fontStyle {
     font-size: 50px;
     display: flex;
     justify-content: center;
