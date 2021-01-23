@@ -1,4 +1,4 @@
-import React, { useRef, memo } from 'react';
+import React, { useRef, memo, useState } from 'react';
 import { Form, Container, Button } from 'react-bootstrap';
 import styles from './ContactStyles.module.css';
 import { contactSubmit } from '../../../ReduxStore/actions';
@@ -7,33 +7,36 @@ import { connect } from 'react-redux';
 function Contact(props) {
 
     const nameRef = useRef(null);
+    const [nameStyle, setNameStyle] = useState({ borderColor: '#ced4da' });
 
     const emailRef = useRef(null);
+    const [emailStyle, setEmailStyle] = useState({ borderColor: '#ced4da' });
 
     const messageRef = useRef(null);
+    const [messageStyle, setMessageStyle] = useState({ borderColor: '#ced4da' });
 
     const handleSubmit = () => {
 
-        const emailReg = /^[\w]+@([\w-]+\.)+[\w-]{2,4}$/g;
+        const emailReg = /^[\w.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
         const emailRegBool = emailReg.test(emailRef.current.value);
 
         if (nameRef.current.value === '') {
-            nameRef.current.style.borderColor = 'red';
+            setNameStyle({ borderColor: 'red' });
         } else {
-            nameRef.current.style.borderColor = '#ced4da';
+            setNameStyle({ borderColor: '#ced4da' });
         };
 
         if (emailRegBool) {
-            emailRef.current.style.borderColor = '#ced4da';
+            setEmailStyle({ borderColor: '#ced4da' });
         } else {
-            emailRef.current.style.borderColor = 'red';
+            setEmailStyle({ borderColor: 'red' });
         };
 
         if (messageRef.current.value === '') {
-            messageRef.current.style.borderColor = 'red';
+            setMessageStyle({ borderColor: 'red' });
         } else {
-            messageRef.current.style.borderColor = '#ced4da';
+            setMessageStyle({ borderColor: '#ced4da' });
         };
 
         if (!!nameRef.current.value && emailRegBool && !!messageRef.current.value) {
@@ -63,8 +66,10 @@ function Contact(props) {
                     <Form.Group className='mt-3'>
                         <Form.Label>Name</Form.Label>
                         <Form.Control
+                            pattern='[A-Za-z]{3}'
                             type="text"
                             ref={nameRef}
+                            style={nameStyle}
                         />
                     </Form.Group>
                     <Form.Group className='mt-3'>
@@ -72,6 +77,7 @@ function Contact(props) {
                         <Form.Control
                             type="email"
                             ref={emailRef}
+                            style={emailStyle}
                         />
                     </Form.Group>
                     <Form.Group>
@@ -80,6 +86,7 @@ function Contact(props) {
                             as="textarea"
                             rows={5}
                             ref={messageRef}
+                            style={messageStyle}
                         />
                     </Form.Group>
                     <Button
